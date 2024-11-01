@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Slf4j
@@ -42,17 +43,23 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product updateProduct(Long productId, Product updatedProduct) {
-        Product product = getProductById(productId);
-        // Assuming you want to update all fields of the product
-        product = Product.builder()
-                .id(product.getId()) // Keep the same ID
+        Product existingProduct = getProductById(productId);
+
+        // Rebuild the product with updated details but same ID
+        Product product = Product.builder()
+                .id(existingProduct.getId())
                 .name(updatedProduct.getName())
                 .type(updatedProduct.getType())
                 .price(updatedProduct.getPrice())
                 .description(updatedProduct.getDescription())
                 .build();
 
-        int index = products.indexOf(product);
+        int index = products.indexOf(existingProduct);
+
+        if (index < 0 ) {
+            throw new NoSuchElementException("Product not found: " + productId);
+        }
+
         products.set(index, product);
         log.info("Product updated: {}", product);
         return product;
@@ -69,21 +76,21 @@ public class ProductServiceImpl implements ProductService {
         return new ArrayList<>(List.of(
                 Product.builder()
                         .id(1L)
-                        .name("Laser Pointer")
+                        .name("Laser Pointer Asteroid")
                         .type(ProductType.COSMIC_CATNIP)
                         .price(15.99)
                         .description("A high-quality laser pointer.")
                         .build(),
                 Product.builder()
                         .id(2L)
-                        .name("Catnip Toy")
+                        .name("Catnip Toy Meteor")
                         .type(ProductType.NEBULA_NAPPING_PODS)
                         .price(9.99)
                         .description("A fun toy filled with catnip.")
                         .build(),
                 Product.builder()
                         .id(3L)
-                        .name("Feline Feeder")
+                        .name("Galaxy Feline Feeder")
                         .type(ProductType.PLASMA_PAW_WARMERS)
                         .price(39.99)
                         .description("An automatic feeder for cats.")

@@ -10,10 +10,12 @@ import lombok.experimental.Accessors;
 @Value
 @Builder(toBuilder = true)
 public class CustomerDetails {
+
     Long id;
     String name;
     String address;
     String phoneNumber;
     String email;
     List<CommunicationChannel> preferredChannel;
+
 }

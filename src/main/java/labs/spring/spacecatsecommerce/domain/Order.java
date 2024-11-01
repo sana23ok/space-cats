@@ -8,7 +8,9 @@ import lombok.Value;
 @Value
 @Builder
 public class Order {
+
     List<ProductType> productTypes;
     Double price;
     Long consumerReference;
+
 }

@@ -2,9 +2,9 @@ spring:
   application:
     name: space-cats-ecommerce
 
-springdoc:
-  api-docs:
-    path: /v3/api-docs
-  swagger-ui:
-    path: /swagger-ui.html
-    url: src/main/resources/api-specs/customer-api.yml  # ????????? ???? ?? ????? OpenAPI
+#springdoc:
+#  api-docs:
+#    path: /v3/api-docs
+#  swagger-ui:
+#    path: /swagger-ui.html
+#    url: src/main/resources/api-specs/customer-api.yml  # ????????? ???? ?? ????? OpenAPI
