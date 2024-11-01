@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
 public class SpaceCatsEcommerceApplication {
-//    @Bean
+
     public static void main(String[] args) {
         SpringApplication.run(SpaceCatsEcommerceApplication.class, args);
     }
