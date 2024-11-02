@@ -2,6 +2,18 @@ spring:
   application:
     name: space-cats-ecommerce
 
+  datasource:
+    url: jdbc:postgresql://localhost:5432/mydatabase
+    username: myuser
+    password: secret
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update # або 'create' або 'validate' в залежності від вашого сценарію
+    show-sql: true # це показує SQL-запити в консолі для налагодження
+
+
 #springdoc:
 #  api-docs:
 #    path: /v3/api-docs
