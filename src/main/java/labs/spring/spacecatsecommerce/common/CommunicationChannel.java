@@ -4,5 +4,6 @@ public enum CommunicationChannel {
     MOBILE,
     EMAIL,
     TELEPATHY,
-    HOLOGRAM;
+    HOLOGRAM,
+    SMS;
 }
