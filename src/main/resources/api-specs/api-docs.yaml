@@ -3,23 +3,23 @@ info:
   title: OpenAPI definition
   version: v0
 servers:
-- url: http://localhost:8080
-  description: Generated server url
+  - url: http://localhost:8080
+    description: Generated server url
 paths:
-  /products/{id}:
+  /api/v1/products/{id}:
     get:
       tags:
-      - product-controller
+        - product-controller
       summary: Retrieve a product by ID
       description: Returns a single product by its unique ID.
       operationId: getProductById
       parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: integer
-          format: int64
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
       responses:
         "404":
           description: Product not found
@@ -35,17 +35,17 @@ paths:
                 $ref: "#/components/schemas/ProductDTO"
     put:
       tags:
-      - product-controller
+        - product-controller
       summary: Update an existing product
       description: Updates an existing product with the specified ID.
       operationId: updateProduct
       parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: integer
-          format: int64
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
       requestBody:
         content:
           application/json:
@@ -67,26 +67,26 @@ paths:
                 $ref: "#/components/schemas/ProductDTO"
     delete:
       tags:
-      - product-controller
+        - product-controller
       summary: Delete a product by ID
       description: Deletes a product with the specified ID.
       operationId: deleteProduct
       parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: integer
-          format: int64
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
       responses:
         "204":
           description: Product deleted successfully
         "404":
           description: Product not found
-  /products:
+  /api/v1/products:
     get:
       tags:
-      - product-controller
+        - product-controller
       summary: Retrieve all products
       description: Returns a list of all available products.
       operationId: getAllProducts
@@ -101,7 +101,7 @@ paths:
                   $ref: "#/components/schemas/ProductDTO"
     post:
       tags:
-      - product-controller
+        - product-controller
       summary: Create a new product
       description: Creates a new product with the given details.
       operationId: createProduct
@@ -119,10 +119,10 @@ paths:
             application/hal+json:
               schema:
                 $ref: "#/components/schemas/ProductDTO"
-  /customers:
+  /api/v1/customers:
     get:
       tags:
-      - customer-controller
+        - customer-controller
       operationId: getAllCustomers
       responses:
         "200":
@@ -133,7 +133,7 @@ paths:
                 $ref: "#/components/schemas/CustomerDetailsListDto"
     post:
       tags:
-      - customer-controller
+        - customer-controller
       operationId: createCustomer
       requestBody:
         content:
@@ -148,36 +148,17 @@ paths:
             application/hal+json:
               schema:
                 $ref: "#/components/schemas/CustomerDetailsDto"
-  /customers/{id}:
-    get:
-      tags:
-      - customer-controller
-      operationId: getCustomerById
-      parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: integer
-          format: int64
-      responses:
-        "200":
-          description: OK
-          content:
-            application/hal+json:
-              schema:
-                $ref: "#/components/schemas/CustomerDetailsDto"
   /api/v1/greetings/{name}:
     get:
       tags:
-      - greeting-controller
-      operationId: getCustomerById_1
+        - greeting-controller
+      operationId: getCustomerById
       parameters:
-      - name: name
-        in: path
-        required: true
-        schema:
-          type: string
+        - name: name
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
         "200":
           description: OK
@@ -185,14 +166,33 @@ paths:
             application/hal+json:
               schema:
                 type: string
+  /api/v1/customers/{id}:
+    get:
+      tags:
+        - customer-controller
+      operationId: getCustomerById_1
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: "#/components/schemas/CustomerDetailsDto"
 components:
   schemas:
     ProductDTO:
       required:
-      - id
-      - name
-      - price
-      - type
+        - id
+        - name
+        - price
+        - type
       type: object
       properties:
         id:
@@ -205,9 +205,9 @@ components:
         type:
           type: string
           enum:
-          - COSMIC_CATNIP
-          - NEBULA_NAPPING_PODS
-          - PLASMA_PAW_WARMERS
+            - COSMIC_CATNIP
+            - NEBULA_NAPPING_PODS
+            - PLASMA_PAW_WARMERS
         price:
           minimum: 0
           type: number
@@ -218,10 +218,10 @@ components:
           type: string
     CustomerDetailsDto:
       required:
-      - address
-      - email
-      - name
-      - phoneNumber
+        - address
+        - email
+        - name
+        - phoneNumber
       type: object
       properties:
         name:
