@@ -42,7 +42,7 @@ public class CustomerControllerTest {
 
     @Test
     void createCustomer_invalidData_shouldReturnBadRequest() throws Exception {
-        mockMvc.perform(post("/customers")
+        mockMvc.perform(post("/api/v1/customers")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"name\":\"\",\"address\":\"\",\"phoneNumber\":\"\",\"email\":\"\",\"preferredChannel\":[]}"))
                 .andExpect(status().isBadRequest());

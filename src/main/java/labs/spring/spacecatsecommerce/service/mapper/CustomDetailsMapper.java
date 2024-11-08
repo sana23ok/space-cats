@@ -8,31 +8,27 @@ import labs.spring.spacecatsecommerce.common.CommunicationChannel;
 import org.mapstruct.Mapper;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.mapstruct.Mapping;
+import org.mapstruct.Named;
 
 @Mapper(componentModel = "spring")
 public interface CustomDetailsMapper {
 
-    default CustomerDetailsDto toCustomerDetailsDto(CustomerDetails customerDetails) {
-        if (customerDetails == null) {
-            return null;
-        }
+    @Mapping(target = "name", source = "name")
+    @Mapping(target = "address", source = "address")
+    @Mapping(target = "phoneNumber", source = "phoneNumber")
+    @Mapping(target = "email", source = "email")
+    @Mapping(target = "preferredChannel", source = "preferredChannel", qualifiedByName = "toPreferredChannelString")
+    CustomerDetailsDto toCustomerDetailsDto(CustomerDetails customerDetails);
 
-        return CustomerDetailsDto.builder()
-//                .id(customerDetails.getId())
-                .name(customerDetails.getName())
-                .address(customerDetails.getAddress())
-                .phoneNumber(customerDetails.getPhoneNumber())
-                .email(customerDetails.getEmail())
-                .preferredChannel(toPreferredChannelString(customerDetails.getPreferredChannel()))
-                .build();
-    }
-
+    @Named("toCustomerDetailsListDto")
     default CustomerDetailsListDto toCustomerDetailsListDto(List<CustomerDetails> customerDetails) {
         return CustomerDetailsListDto.builder()
                 .customerDetailsEntries(toCustomerDetailsEntry(customerDetails))
                 .build();
     }
 
+    @Named("toCustomerDetailsEntry")
     default List<CustomerDetailsEntry> toCustomerDetailsEntry(List<CustomerDetails> customerDetails) {
         if (customerDetails == null) {
             return null;
@@ -48,6 +44,7 @@ public interface CustomDetailsMapper {
                 .build()).collect(Collectors.toList());
     }
 
+    @Named("toPreferredChannelString")
     default List<String> toPreferredChannelString(List<CommunicationChannel> preferredChannel) {
         if (preferredChannel == null) {
             return null;

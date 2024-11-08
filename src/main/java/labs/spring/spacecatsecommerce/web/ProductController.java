@@ -17,7 +17,7 @@ import java.util.List;
 
 @RestController
 @Validated
-@RequestMapping("/products")
+@RequestMapping("/api/v1/products")//веріонування
 public class ProductController {
     private final ProductService productService;
     private final ProductMapper productMapper;

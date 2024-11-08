@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @Validated
-@RequestMapping("/customers")
+@RequestMapping("/api/v1/customers")//додала версіонування
 public class CustomerController {
 
     private final CustomerService customerService;
