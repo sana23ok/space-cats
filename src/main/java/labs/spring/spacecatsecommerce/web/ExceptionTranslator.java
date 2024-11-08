@@ -4,11 +4,10 @@ import labs.spring.spacecatsecommerce.service.exception.CustomerNotFoundExceptio
 import labs.spring.spacecatsecommerce.web.exception.CatNotFoundException;
 import labs.spring.spacecatsecommerce.web.exception.ParamsViolationDetails;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.http.ProblemDetail;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -53,6 +52,5 @@ public class ExceptionTranslator extends ResponseEntityExceptionHandler {
         log.info("Input params validation failed");
         return ResponseEntity.status(BAD_REQUEST).body(getValidationErrorsProblemDetail(validationResponse));
     }
-
 
 }

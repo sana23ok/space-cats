@@ -1,6 +1,5 @@
 package labs.spring.spacecatsecommerce.service;
 
-
 import labs.spring.spacecatsecommerce.domain.Product;
 import labs.spring.spacecatsecommerce.dto.ProductDTO;
 import org.springframework.stereotype.Service;
