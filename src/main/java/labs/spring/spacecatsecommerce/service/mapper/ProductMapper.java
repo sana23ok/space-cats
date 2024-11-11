@@ -10,45 +10,45 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface ProductMapper {
 
-//    @Mapping(target = "id", source = "id")
-//    @Mapping(target = "name", source = "name")
-//    @Mapping(target = "type", source = "type")
-//    @Mapping(target = "price", source = "price")
-//    @Mapping(target = "description", source = "description")
-//    ProductDTO toProductDto(Product product);
-    default ProductDTO toProductDto(Product product) {
-        if (product == null) {
-            return null;
-        }
+    @Mapping(target = "id", source = "id")
+    @Mapping(target = "name", source = "name")
+    @Mapping(target = "type", source = "type")
+    @Mapping(target = "price", source = "price")
+    @Mapping(target = "description", source = "description")
+    ProductDTO toProductDto(Product product);
+//    default ProductDTO toProductDto(Product product) {
+//        if (product == null) {
+//            return null;
+//        }
+//
+//        return ProductDTO.builder()
+//                .id(product.getId())
+//                .name(product.getName())
+//                .type(product.getType())
+//                .price(product.getPrice())
+//                .description(product.getDescription())
+//                .build();
+//    }
 
-        return ProductDTO.builder()
-                .id(product.getId())
-                .name(product.getName())
-                .type(product.getType())
-                .price(product.getPrice())
-                .description(product.getDescription())
-                .build();
-    }
-
-//    @Mapping(target = "id", source = "id")
-//    @Mapping(target = "name", source = "name")
-//    @Mapping(target = "type", source = "type")
-//    @Mapping(target = "price", source = "price")
-//    @Mapping(target = "description", source = "description")
-//    Product toProduct(ProductDTO productDto);
-    default Product toProduct(ProductDTO productDto) {
-        if (productDto == null) {
-            return null;
-        }
-
-        return Product.builder()
-                .id(productDto.getId())
-                .name(productDto.getName())
-                .type(productDto.getType())
-                .price(productDto.getPrice())
-                .description(productDto.getDescription())
-                .build();
-    }
+    @Mapping(target = "id", source = "id")
+    @Mapping(target = "name", source = "name")
+    @Mapping(target = "type", source = "type")
+    @Mapping(target = "price", source = "price")
+    @Mapping(target = "description", source = "description")
+    Product toProduct(ProductDTO productDto);
+//    default Product toProduct(ProductDTO productDto) {
+//        if (productDto == null) {
+//            return null;
+//        }
+//
+//        return Product.builder()
+//                .id(productDto.getId())
+//                .name(productDto.getName())
+//                .type(productDto.getType())
+//                .price(productDto.getPrice())
+//                .description(productDto.getDescription())
+//                .build();
+//    }
 
     @Named("toProductDtoList")
     default List<ProductDTO> toProductDto(List<Product> products) {

@@ -14,26 +14,26 @@ import org.mapstruct.Named;
 @Mapper(componentModel = "spring")
 public interface CustomDetailsMapper {
 
-//    @Mapping(target = "name", source = "name")
-//    @Mapping(target = "address", source = "address")
-//    @Mapping(target = "phoneNumber", source = "phoneNumber")
-//    @Mapping(target = "email", source = "email")
-//    @Mapping(target = "preferredChannel", source = "preferredChannel", qualifiedByName = "toPreferredChannelString")
-//    CustomerDetailsDto toCustomerDetailsDto(CustomerDetails customerDetails);
-    default CustomerDetailsDto toCustomerDetailsDto(CustomerDetails customerDetails) {
-        if (customerDetails == null) {
-            return null;
-        }
-
-        return CustomerDetailsDto.builder()
-//                .id(customerDetails.getId())
-                .name(customerDetails.getName())
-                .address(customerDetails.getAddress())
-                .phoneNumber(customerDetails.getPhoneNumber())
-                .email(customerDetails.getEmail())
-                .preferredChannel(toPreferredChannelString(customerDetails.getPreferredChannel()))
-                .build();
-    }
+    @Mapping(target = "name", source = "name")
+    @Mapping(target = "address", source = "address")
+    @Mapping(target = "phoneNumber", source = "phoneNumber")
+    @Mapping(target = "email", source = "email")
+    @Mapping(target = "preferredChannel", source = "preferredChannel", qualifiedByName = "toPreferredChannelString")
+    CustomerDetailsDto toCustomerDetailsDto(CustomerDetails customerDetails);
+//    default CustomerDetailsDto toCustomerDetailsDto(CustomerDetails customerDetails) {
+//        if (customerDetails == null) {
+//            return null;
+//        }
+//
+//        return CustomerDetailsDto.builder()
+////                .id(customerDetails.getId())
+//                .name(customerDetails.getName())
+//                .address(customerDetails.getAddress())
+//                .phoneNumber(customerDetails.getPhoneNumber())
+//                .email(customerDetails.getEmail())
+//                .preferredChannel(toPreferredChannelString(customerDetails.getPreferredChannel()))
+//                .build();
+//    }
 
     @Named("toCustomerDetailsListDto")
     default CustomerDetailsListDto toCustomerDetailsListDto(List<CustomerDetails> customerDetails) {
