@@ -9,15 +9,11 @@ import org.springframework.context.annotation.Configuration;
 @Data
 @NoArgsConstructor
 @Configuration
-@ConfigurationProperties(prefix = "feature")
+@ConfigurationProperties(prefix = "application.feature")
 public class FeatureToggleProperties {
 
     private Map<String, Boolean> toggles;
-
-    public void setToggles(Map<String, Boolean> toggles) {
-        this.toggles = toggles;
-    }
-
+    
     public boolean check(String featureToggle) {
         return toggles.getOrDefault(featureToggle, false);
     }

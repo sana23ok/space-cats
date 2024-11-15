@@ -12,9 +12,21 @@ public class FeatureToggleService {
         this.featureToggleProperties = featureToggleProperties;
     }
 
-    public boolean isFeatureEnabled(String featureName) {
+    // Перевірка, чи фіча увімкнена
+    public boolean check(String featureName) {
         return featureToggleProperties.check(featureName);
     }
+
+    // Увімкнення фічі
+    public void enable(String featureName) {
+        featureToggleProperties.getToggles().put(featureName, true);
+    }
+
+    // Вимкнення фічі
+    public void disable(String featureName) {
+        featureToggleProperties.getToggles().put(featureName, false);
+    }
 }
+
 
 
