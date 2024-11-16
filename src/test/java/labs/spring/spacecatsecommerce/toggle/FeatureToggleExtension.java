@@ -19,9 +19,11 @@ public class FeatureToggleExtension implements BeforeEachCallback, AfterEachCall
             if (method.isAnnotationPresent(EnabledFeatureToggle.class)) {
                 EnabledFeatureToggle enabled = method.getAnnotation(EnabledFeatureToggle.class);
                 featureToggleService.enable(enabled.value());
+                System.out.println("Feature enabled: " + enabled.value()); // Debug log
             } else if (method.isAnnotationPresent(DisabledFeatureToggle.class)) {
                 DisabledFeatureToggle disabled = method.getAnnotation(DisabledFeatureToggle.class);
                 featureToggleService.disable(disabled.value());
+                System.out.println("Feature disabled: " + disabled.value()); // Debug log
             }
         });
     }
@@ -36,8 +38,10 @@ public class FeatureToggleExtension implements BeforeEachCallback, AfterEachCall
                 boolean originalState = properties.check(key);
                 if (originalState) {
                     featureToggleService.enable(FeatureToggles.valueOf(key.toUpperCase()));
+                    System.out.println("Restoring feature to enabled: " + key); // Debug log
                 } else {
                     featureToggleService.disable(FeatureToggles.valueOf(key.toUpperCase()));
+                    System.out.println("Restoring feature to disabled: " + key); // Debug log
                 }
             }
         });
