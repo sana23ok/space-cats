@@ -80,6 +80,9 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     implementation 'org.springframework.boot:spring-boot-starter-aop'
+    testImplementation 'org.wiremock:wiremock-jetty12:3.9.2'
+    implementation 'com.h2database:h2:2.2.224'
+
 }
 
 tasks.named('test') {

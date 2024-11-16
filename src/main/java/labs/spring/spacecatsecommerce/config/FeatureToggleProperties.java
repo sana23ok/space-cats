@@ -1,10 +1,10 @@
 package labs.spring.spacecatsecommerce.config;
 
-import java.util.Map;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
+import java.util.Map;
 
 @Data
 @NoArgsConstructor
@@ -13,8 +13,13 @@ import org.springframework.context.annotation.Configuration;
 public class FeatureToggleProperties {
 
     private Map<String, Boolean> toggles;
-    
-    public boolean check(String featureToggle) {
-        return toggles.getOrDefault(featureToggle, false);
+
+    public boolean check(String key) {
+        if (toggles == null) {
+            throw new IllegalStateException("Feature toggles are not initialized!");
+        }
+        return toggles.getOrDefault(key, false);
     }
+
 }
+

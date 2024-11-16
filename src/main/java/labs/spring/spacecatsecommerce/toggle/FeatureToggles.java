@@ -1,16 +1,16 @@
 package labs.spring.spacecatsecommerce.toggle;
+import lombok.Getter;
 
+@Getter
 public enum FeatureToggles {
-    COSMO_CATS("feature.cosmoCats.enabled"),
-    KITTY_PRODUCTS("feature.kittyProducts.enabled");
 
-    private final String key;
+    COSMO_CATS("cosmoCats"),
+    KITTY_PRODUCTS("kittyProducts");
 
-    FeatureToggles(String key) {
-        this.key = key;
+    private final String featureName;
+
+    FeatureToggles(String featureName) {
+        this.featureName = featureName;
     }
 
-    public String getKey() {
-        return key;
-    }
 }
