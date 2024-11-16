@@ -1,16 +1,14 @@
 package labs.spring.spacecatsecommerce.service;
 
 import org.springframework.stereotype.Service;
-
 import java.util.List;
+import labs.spring.spacecatsecommerce.domain.SpaceCat;
+
 
 @Service
-public class SpaceCatService {
+public interface SpaceCatService {
 
-    public List<String> getSpaceCats() {
-
-        return List.of("CosmoCat1", "CosmoCat2", "CosmoCat3");
-
-    }
+    List<SpaceCat> getAllSpaceCats();
+    SpaceCat getSpaceCatById(Long spaceCatId);
 
 }

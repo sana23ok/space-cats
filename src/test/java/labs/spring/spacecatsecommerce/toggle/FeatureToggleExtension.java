@@ -1,7 +1,6 @@
 package labs.spring.spacecatsecommerce.toggle;
 
 import labs.spring.spacecatsecommerce.config.FeatureToggleProperties;
-import labs.spring.spacecatsecommerce.toggle.FeatureToggleService;
 import labs.spring.spacecatsecommerce.toggle.annotation.DisabledFeatureToggle;
 import labs.spring.spacecatsecommerce.toggle.annotation.EnabledFeatureToggle;
 import org.junit.jupiter.api.extension.AfterEachCallback;
