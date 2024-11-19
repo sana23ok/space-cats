@@ -1,21 +1,35 @@
 package labs.spring.spacecatsecommerce.service.impl;
 
 import labs.spring.spacecatsecommerce.domain.SpaceCat;
+import labs.spring.spacecatsecommerce.dto.SpaceCatDTO;
+import labs.spring.spacecatsecommerce.service.mapper.SpaceCatMapper;
 import labs.spring.spacecatsecommerce.service.SpaceCatService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
+@Slf4j
 @Service
 public class SpaceCatServiceImpl implements SpaceCatService {
 
+    private final SpaceCatMapper spaceCatMapper;
     private final List<SpaceCat> spaceCats = buildAllSpaceCatsMock();
 
-    public List<SpaceCat> getAllSpaceCats() {
-        return spaceCats;
+    public SpaceCatServiceImpl(SpaceCatMapper spaceCatMapper) {
+        this.spaceCatMapper = spaceCatMapper;
     }
 
+    @Override
+    public List<SpaceCatDTO> getAllSpaceCats() {
+        return spaceCats.stream()
+                .map(spaceCatMapper::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public SpaceCat getSpaceCatById(Long spaceCatId) {
         return spaceCats.stream()
                 .filter(spaceCat -> spaceCat.getId().equals(spaceCatId))

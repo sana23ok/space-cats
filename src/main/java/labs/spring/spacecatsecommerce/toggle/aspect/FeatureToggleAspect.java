@@ -14,7 +14,6 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class FeatureToggleAspect {
-
     private final FeatureToggleProperties featureToggleProperties;
 
     @Before("@annotation(featureToggle)")
@@ -22,11 +21,9 @@ public class FeatureToggleAspect {
         FeatureToggles feature = featureToggle.value();
         String featureName = feature.getFeatureName();
 
-        // Перевіряємо, чи увімкнена функція
-        boolean isEnabled = featureToggleProperties.check(featureName);
-
-        if (!isEnabled) {
-            throw new FeatureNotAvailableException("Feature " + featureName + " is not enabled.");
+        if (!featureToggleProperties.check(featureName)) {
+            throw new FeatureNotAvailableException(featureName);
         }
     }
 }
+

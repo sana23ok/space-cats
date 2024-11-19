@@ -55,34 +55,48 @@ apply from: "${rootProject.projectDir}/gradle/test.gradle"
 apply from: "${rootProject.projectDir}/gradle/jacoco.gradle"
 
 dependencies {
+// Spring Boot dependencies
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-data-rest'
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'jakarta.validation:jakarta.validation-api:3.1.0'
-    implementation 'org.mapstruct:mapstruct:1.6.2'
-    implementation 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
-    annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.2'
-    testAnnotationProcessor 'org.mapstruct:mapstruct-processor:1.6.2'
-    compileOnly 'org.projectlombok:lombok:1.18.34'
-    compileOnly 'org.mapstruct:mapstruct:1.6.2'
-    developmentOnly 'org.springframework.boot:spring-boot-docker-compose'
-    runtimeOnly 'org.postgresql:postgresql'
-    annotationProcessor 'org.projectlombok:lombok:1.18.34'
     implementation 'org.springframework.boot:spring-boot-starter-validation:3.3.4'
-    testImplementation 'org.springframework.boot:spring-boot-testcontainers'
-    testImplementation 'org.springframework.security:spring-security-test'
-    testImplementation 'org.testcontainers:junit-jupiter'
-    testImplementation 'org.testcontainers:postgresql'
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0'
-    implementation 'org.springdoc:springdoc-openapi-starter-common:2.1.0'
+    implementation 'org.springframework.boot:spring-boot-starter-aop'
+
+// Database dependencies
+    runtimeOnly 'org.postgresql:postgresql'
     compileOnly 'org.springframework.boot:spring-boot-configuration-processor'
-    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+// Lombok dependencies
+    compileOnly 'org.projectlombok:lombok:1.18.34'
+    annotationProcessor 'org.projectlombok:lombok:1.18.34'
+    implementation 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
+
+// MapStruct dependencies
+    implementation 'org.mapstruct:mapstruct:1.6.2'
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.2'
+    compileOnly 'org.mapstruct:mapstruct:1.6.2'
+
+// Spring Security dependencies (for testing and configuration)
+    testImplementation 'org.springframework.security:spring-security-test'
+
+// Testing dependencies
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-    implementation 'org.springframework.boot:spring-boot-starter-aop'
+    testImplementation 'org.testcontainers:junit-jupiter'
+    testImplementation 'org.testcontainers:postgresql'
+    testImplementation 'org.springframework.boot:spring-boot-testcontainers'
     testImplementation 'org.wiremock:wiremock-jetty12:3.9.2'
-    implementation 'com.h2database:h2:2.2.224'
 
+// Documentation dependencies
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0'
+    implementation 'org.springdoc:springdoc-openapi-starter-common:2.1.0'
+
+// Development dependencies
+    developmentOnly 'org.springframework.boot:spring-boot-docker-compose'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+// In-memory database for testing
+    implementation 'com.h2database:h2:2.2.224'
 }
 
 tasks.named('test') {

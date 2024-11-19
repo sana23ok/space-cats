@@ -1,14 +1,14 @@
 package labs.spring.spacecatsecommerce.web;
 
 import labs.spring.spacecatsecommerce.domain.SpaceCat;
+import labs.spring.spacecatsecommerce.dto.SpaceCatDTO;
 import labs.spring.spacecatsecommerce.service.SpaceCatService;
-import labs.spring.spacecatsecommerce.toggle.FeatureToggleService;
+import labs.spring.spacecatsecommerce.service.mapper.SpaceCatMapper;
 import labs.spring.spacecatsecommerce.toggle.FeatureToggles;
+import labs.spring.spacecatsecommerce.toggle.annotation.FeatureToggle;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
@@ -16,44 +16,26 @@ import java.util.List;
 public class SpaceCatController {
 
     private final SpaceCatService spaceCatService;
-    private final FeatureToggleService featureToggleService;
+    private final SpaceCatMapper spaceCatMapper;
 
     @Autowired
-    public SpaceCatController(SpaceCatService spaceCatService, FeatureToggleService featureToggleService) {
+    public SpaceCatController(SpaceCatService spaceCatService, SpaceCatMapper spaceCatMapper) {
         this.spaceCatService = spaceCatService;
-        this.featureToggleService = featureToggleService;
+        this.spaceCatMapper = spaceCatMapper;
     }
 
     @GetMapping
-    public ResponseEntity<List<SpaceCat>> getAllSpaceCats() {
-        FeatureToggles toggle = FeatureToggles.COSMO_CATS;
-
-        if (!featureToggleService.check(toggle)) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-
-        return ResponseEntity.ok(spaceCatService.getAllSpaceCats());
+    @FeatureToggle(FeatureToggles.COSMO_CATS)
+    public ResponseEntity<List<SpaceCatDTO>> getAllCosmoCats() {
+        List<SpaceCatDTO> spaceCats = spaceCatService.getAllSpaceCats();
+        return ResponseEntity.ok(spaceCats);
     }
 
-    /**
-     * Отримати конкретного SpaceCat за ID.
-     */
     @GetMapping("/{id}")
-    public ResponseEntity<SpaceCat> getSpaceCatById(@PathVariable Long id) {
-        FeatureToggles toggle = FeatureToggles.COSMO_CATS;
-
-        if (!featureToggleService.check(toggle)) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-
-        try {
-            SpaceCat spaceCat = spaceCatService.getSpaceCatById(id);
-            return ResponseEntity.ok(spaceCat);
-        } catch (RuntimeException ex) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+    @FeatureToggle(FeatureToggles.COSMO_CATS)
+    public ResponseEntity<SpaceCatDTO> getCosmoCatById(@PathVariable Long id) {
+        SpaceCat spaceCat = spaceCatService.getSpaceCatById(id);
+        SpaceCatDTO spaceCatDTO = spaceCatMapper.toDTO(spaceCat);
+        return ResponseEntity.ok(spaceCatDTO);
     }
 }
-
-
-
