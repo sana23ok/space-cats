@@ -4,6 +4,40 @@ databaseChangeLog:
       author: oksana
       changes:
         - createTable:
+            tableName: category
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: TEXT
+                  constraints:
+                    nullable: true
+
+        - createSequence:
+            sequenceName: category_id_seq
+            startValue: 1
+            incrementBy: 1
+        - addAutoIncrement:
+            tableName: category
+            columnName: id
+            incrementBy: 1
+            startWith: 1
+
+  - changeSet:
+      id: product-table-init
+      author: oksana
+      changes:
+        - createTable:
             tableName: product
             columns:
               - column:
@@ -43,7 +77,24 @@ databaseChangeLog:
             referencedTableName: category
             referencedColumnNames: id
             constraintName: fk_product_category
+
         - addUniqueConstraint:
             tableName: product
-            columnNames: name
-            constraintName: uq_product_name
+            columnNames: category_id, name
+            constraintName: uq_product_name_category
+
+        - createIndex:
+            tableName: product
+            indexName: idx_product_name
+            columns:
+              - name: name
+
+        - createSequence:
+            sequenceName: product_id_seq
+            startValue: 1
+            incrementBy: 1
+        - addAutoIncrement:
+            tableName: product
+            columnName: id
+            incrementBy: 1
+            startWith: 1
