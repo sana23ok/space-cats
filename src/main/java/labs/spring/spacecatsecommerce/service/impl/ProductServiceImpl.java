@@ -1,16 +1,16 @@
 package labs.spring.spacecatsecommerce.service.impl;
 
 import labs.spring.spacecatsecommerce.common.ProductType;
+import labs.spring.spacecatsecommerce.domain.Category;
 import labs.spring.spacecatsecommerce.domain.Product;
 import labs.spring.spacecatsecommerce.service.ProductService;
 import labs.spring.spacecatsecommerce.service.exception.ProductNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
+
 
 @Slf4j
 @Service
@@ -36,6 +36,18 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product createProduct(Product product) {
+
+        if (product.getCategory() == null) {
+            Category defaultCategory = Category.builder()
+                    .id(1L)
+                    .name("Default Category")
+                    .description("Default category description")
+                    .build();
+            product = product.toBuilder()
+                    .category(defaultCategory)
+                    .build();
+        }
+
         products.add(product);
         log.info("Product created: {}", product);
         return product;
@@ -45,13 +57,13 @@ public class ProductServiceImpl implements ProductService {
     public Product updateProduct(Long productId, Product updatedProduct) {
         Product existingProduct = getProductById(productId);
 
-        // Rebuild the product with updated details but same ID
         Product product = Product.builder()
                 .id(existingProduct.getId())
                 .name(updatedProduct.getName())
                 .type(updatedProduct.getType())
                 .price(updatedProduct.getPrice())
                 .description(updatedProduct.getDescription())
+                .category(updatedProduct.getCategory() != null ? updatedProduct.getCategory() : existingProduct.getCategory())  // Keep the old category if none provided
                 .build();
 
         int index = products.indexOf(existingProduct);
@@ -73,6 +85,18 @@ public class ProductServiceImpl implements ProductService {
     }
 
     private List<Product> buildAllProductsMock() {
+        Category electronics = Category.builder()
+                .id(1L)
+                .name("Electronics")
+                .description("Devices and gadgets")
+                .build();
+
+        Category toys = Category.builder()
+                .id(2L)
+                .name("Toys")
+                .description("Fun items for pets")
+                .build();
+
         return new ArrayList<>(List.of(
                 Product.builder()
                         .id(1L)
@@ -80,6 +104,7 @@ public class ProductServiceImpl implements ProductService {
                         .type(ProductType.COSMIC_CATNIP)
                         .price(15.99)
                         .description("A high-quality laser pointer.")
+                        .category(electronics)
                         .build(),
                 Product.builder()
                         .id(2L)
@@ -87,6 +112,7 @@ public class ProductServiceImpl implements ProductService {
                         .type(ProductType.NEBULA_NAPPING_PODS)
                         .price(9.99)
                         .description("A fun toy filled with catnip.")
+                        .category(toys)
                         .build(),
                 Product.builder()
                         .id(3L)
@@ -94,6 +120,7 @@ public class ProductServiceImpl implements ProductService {
                         .type(ProductType.PLASMA_PAW_WARMERS)
                         .price(39.99)
                         .description("An automatic feeder for cats.")
+                        .category(electronics)
                         .build()
         ));
     }

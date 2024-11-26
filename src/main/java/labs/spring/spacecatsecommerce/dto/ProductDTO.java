@@ -31,4 +31,7 @@ public class ProductDTO {
 
     @Size(max = 200, message = "Description must be no more than 200 characters")
     private String description;
+
+    @NotNull(message = "Category cannot be null")
+    private CategoryDTO category;
 }

@@ -7,7 +7,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import java.util.List;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = CategoryMapper.class)
 public interface ProductMapper {
 
     @Mapping(target = "id", source = "id")
@@ -15,6 +15,7 @@ public interface ProductMapper {
     @Mapping(target = "type", source = "type")
     @Mapping(target = "price", source = "price")
     @Mapping(target = "description", source = "description")
+    @Mapping(target = "category", source = "category")
     ProductDTO toProductDto(Product product);
 //    default ProductDTO toProductDto(Product product) {
 //        if (product == null) {
@@ -35,6 +36,7 @@ public interface ProductMapper {
     @Mapping(target = "type", source = "type")
     @Mapping(target = "price", source = "price")
     @Mapping(target = "description", source = "description")
+    @Mapping(target = "category", source = "category")
     Product toProduct(ProductDTO productDto);
 //    default Product toProduct(ProductDTO productDto) {
 //        if (productDto == null) {

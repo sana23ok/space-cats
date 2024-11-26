@@ -13,5 +13,6 @@ public class Product {
     ProductType type;
     Double price;
     String description;
+    Category category;
 
 }
