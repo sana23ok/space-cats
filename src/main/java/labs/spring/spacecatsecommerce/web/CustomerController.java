@@ -1,7 +1,7 @@
 package labs.spring.spacecatsecommerce.web;
 
-import labs.spring.spacecatsecommerce.dto.CustomerDetailsDto;
-import labs.spring.spacecatsecommerce.dto.CustomerDetailsListDto;
+import labs.spring.spacecatsecommerce.dto.customer.CustomerDetailsDto;
+import labs.spring.spacecatsecommerce.dto.customer.CustomerDetailsListDto;
 import labs.spring.spacecatsecommerce.service.CustomerService;
 import labs.spring.spacecatsecommerce.service.mapper.CustomDetailsMapper;
 import jakarta.validation.Valid;

@@ -1,9 +1,9 @@
 package labs.spring.spacecatsecommerce.service.mapper;
 
 import labs.spring.spacecatsecommerce.domain.CustomerDetails;
-import labs.spring.spacecatsecommerce.dto.CustomerDetailsDto;
-import labs.spring.spacecatsecommerce.dto.CustomerDetailsEntry;
-import labs.spring.spacecatsecommerce.dto.CustomerDetailsListDto;
+import labs.spring.spacecatsecommerce.dto.customer.CustomerDetailsDto;
+import labs.spring.spacecatsecommerce.dto.customer.CustomerDetailsEntry;
+import labs.spring.spacecatsecommerce.dto.customer.CustomerDetailsListDto;
 import labs.spring.spacecatsecommerce.common.CommunicationChannel;
 import org.mapstruct.Mapper;
 import java.util.List;

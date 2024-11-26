@@ -1,0 +1,28 @@
+databaseChangeLog:
+  - changeSet:
+      id: category-table-init
+      author: oksana
+      changes:
+        - createTable:
+            tableName: category
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: TEXT
+                  constraints:
+                    nullable: true
+        - addUniqueConstraint:
+            tableName: category
+            columnNames: name
+            constraintName: uq_category_name

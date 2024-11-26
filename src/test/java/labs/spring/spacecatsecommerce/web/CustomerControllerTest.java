@@ -1,8 +1,5 @@
 package labs.spring.spacecatsecommerce.web;
 
-import labs.spring.spacecatsecommerce.domain.CustomerDetails;
-import labs.spring.spacecatsecommerce.dto.CustomerDetailsDto;
-import labs.spring.spacecatsecommerce.dto.CustomerDetailsListDto;
 import labs.spring.spacecatsecommerce.service.CustomerService;
 import labs.spring.spacecatsecommerce.service.mapper.CustomDetailsMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,10 +11,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.util.Collections;
-
-import static org.hamcrest.Matchers.*;
-import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 

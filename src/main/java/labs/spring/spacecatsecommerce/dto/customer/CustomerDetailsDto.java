@@ -1,6 +1,5 @@
-package labs.spring.spacecatsecommerce.dto;
+package labs.spring.spacecatsecommerce.dto.customer;
 
-import labs.spring.spacecatsecommerce.common.CommunicationChannel;
 import labs.spring.spacecatsecommerce.dto.validation.ExtendedValidation;
 import labs.spring.spacecatsecommerce.dto.validation.ValidSpaceAddress;
 import jakarta.validation.GroupSequence;
