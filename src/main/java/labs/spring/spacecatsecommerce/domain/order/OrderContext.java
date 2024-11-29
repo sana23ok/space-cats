@@ -10,7 +10,7 @@ import lombok.Value;
 public class OrderContext {
 
     String cartId;
-    UUID customerReference;
+    Long customerReference;
     List<OrderEntry> entries;
     Double totalPrice;
 

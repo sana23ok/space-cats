@@ -1,15 +1,12 @@
 package labs.spring.spacecatsecommerce.repository.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.SequenceGenerator;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Entity
 @Data
@@ -26,4 +23,7 @@ public class CategoryEntity {
 
     String name;
     String description;
+
+    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
+    List<ProductEntity> products;
 }

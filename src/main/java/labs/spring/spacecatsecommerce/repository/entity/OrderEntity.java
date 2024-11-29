@@ -38,7 +38,7 @@ public class OrderEntity {
     String paymentReference;
 
     @ManyToOne(cascade = PERSIST)
-    @JoinColumn(name = "customer", nullable = false)
+    @JoinColumn(name = "customer_id", nullable = false)
     CustomerEntity customer;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.PERSIST, orphanRemoval = true)

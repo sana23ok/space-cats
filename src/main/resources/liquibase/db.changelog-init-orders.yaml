@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: lab-3-2
+      id: orders-table-init
       author: oksana
       changes:
         # Create the order table with sequence for 'id' and foreign key to 'customer'

@@ -1,5 +1,4 @@
 package labs.spring.spacecatsecommerce.service.impl;
-
 import labs.spring.spacecatsecommerce.common.ProductType;
 import labs.spring.spacecatsecommerce.domain.Category;
 import labs.spring.spacecatsecommerce.domain.Product;
@@ -10,6 +9,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import org.springframework.transaction.annotation.Transactional;
 
 
 @Slf4j
@@ -35,8 +35,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional
     public Product createProduct(Product product) {
-
         if (product.getCategory() == null) {
             Category defaultCategory = Category.builder()
                     .id(1L)
@@ -53,7 +53,9 @@ public class ProductServiceImpl implements ProductService {
         return product;
     }
 
+
     @Override
+    @Transactional
     public Product updateProduct(Long productId, Product updatedProduct) {
         Product existingProduct = getProductById(productId);
 
@@ -63,12 +65,12 @@ public class ProductServiceImpl implements ProductService {
                 .type(updatedProduct.getType())
                 .price(updatedProduct.getPrice())
                 .description(updatedProduct.getDescription())
-                .category(updatedProduct.getCategory() != null ? updatedProduct.getCategory() : existingProduct.getCategory())  // Keep the old category if none provided
+                .category(updatedProduct.getCategory() != null ? updatedProduct.getCategory() : existingProduct.getCategory())
                 .build();
 
         int index = products.indexOf(existingProduct);
 
-        if (index < 0 ) {
+        if (index < 0) {
             throw new NoSuchElementException("Product not found: " + productId);
         }
 
@@ -78,6 +80,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional
     public void deleteProduct(Long productId) {
         Product product = getProductById(productId);
         products.remove(product);

@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
@@ -16,20 +17,58 @@ public class CustomerServiceImpl implements CustomerService {
     private final List<CustomerDetails> customerDetails = buildAllCustomerDetailsMock();
 
     @Override
+    @Transactional(readOnly = true)
     public List<CustomerDetails> getAllCustomerDetails() {
         return customerDetails;
     }
 
+
     @Override
+    @Transactional(readOnly = true)
     public CustomerDetails getCustomerDetailsById(Long customerId) {
         return Optional.of(customerDetails.stream()
-            .filter(details -> details.getId().equals(customerId)).findFirst())
-            .get()
-            .orElseThrow(() -> {
-                log.info("Customer with id {} not found in mock", customerId);
-                return new CustomerNotFoundException(customerId);
-            });
+                        .filter(details -> details.getId().equals(customerId)).findFirst())
+                .get()
+                .orElseThrow(() -> {
+                    log.info("Customer with id {} not found in mock", customerId);
+                    return new CustomerNotFoundException(customerId);
+                });
     }
+
+    @Transactional
+    @Override
+    public CustomerDetails createCustomer(CustomerDetails customerDetails) {
+        Long newId = this.customerDetails.stream()
+                .map(CustomerDetails::getId)
+                .max(Long::compareTo)
+                .orElse(0L) + 1;
+
+        CustomerDetails newCustomer = customerDetails.toBuilder().id(newId).build();
+        this.customerDetails.add(newCustomer);
+        log.info("Customer created: {}", newCustomer);
+        return newCustomer;
+    }
+
+    @Transactional
+    @Override
+    public CustomerDetails updateCustomer(Long customerId, CustomerDetails updatedDetails) {
+        CustomerDetails existingCustomer = getCustomerDetailsById(customerId);
+
+        CustomerDetails updatedCustomer = existingCustomer.toBuilder()
+                .name(updatedDetails.getName() != null ? updatedDetails.getName() : existingCustomer.getName())
+                .address(updatedDetails.getAddress() != null ? updatedDetails.getAddress() : existingCustomer.getAddress())
+                .phoneNumber(updatedDetails.getPhoneNumber() != null ? updatedDetails.getPhoneNumber() : existingCustomer.getPhoneNumber())
+                .email(updatedDetails.getEmail() != null ? updatedDetails.getEmail() : existingCustomer.getEmail())
+                .preferredChannel(updatedDetails.getPreferredChannel() != null ? updatedDetails.getPreferredChannel() : existingCustomer.getPreferredChannel())
+                .build();
+
+        int index = this.customerDetails.indexOf(existingCustomer);
+        this.customerDetails.set(index, updatedCustomer);
+
+        log.info("Customer updated: {}", updatedCustomer);
+        return updatedCustomer;
+    }
+
 
     private List<CustomerDetails> buildAllCustomerDetailsMock() {
         return List.of(

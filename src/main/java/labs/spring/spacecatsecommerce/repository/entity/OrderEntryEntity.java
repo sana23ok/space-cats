@@ -33,6 +33,6 @@ public class OrderEntryEntity {
     Double price;
 
     @ManyToOne(cascade = PERSIST)
-    @JoinColumn(name = "order", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "order_id", referencedColumnName = "id", nullable = false)
     OrderEntity order;
 }

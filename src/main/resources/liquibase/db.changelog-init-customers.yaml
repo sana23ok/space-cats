@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: lab-3-1
+      id: customers-table-init
       author: oksana
       changes:
         # Create sequence for Customer ID
