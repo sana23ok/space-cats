@@ -1,151 +1,153 @@
 package labs.spring.spacecatsecommerce.service.impl;
+
 import labs.spring.spacecatsecommerce.common.ProductType;
 import labs.spring.spacecatsecommerce.domain.Category;
 import labs.spring.spacecatsecommerce.domain.Product;
+import labs.spring.spacecatsecommerce.repository.CategoryRepository;
+import labs.spring.spacecatsecommerce.repository.ProductRepository;
+import labs.spring.spacecatsecommerce.repository.entity.CategoryEntity;
+import labs.spring.spacecatsecommerce.repository.entity.ProductEntity;
 import labs.spring.spacecatsecommerce.service.ProductService;
 import labs.spring.spacecatsecommerce.service.exception.PersistenceException;
 import labs.spring.spacecatsecommerce.service.exception.ProductNotFoundException;
+import labs.spring.spacecatsecommerce.service.mapper.ProductMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
 import org.springframework.transaction.annotation.Transactional;
-
+import java.util.Iterator;
+import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
 public class ProductServiceImpl implements ProductService {
 
-    private final List<Product> products = buildAllProductsMock();
+    private final ProductRepository productRepository;
+    private final CategoryRepository categoryRepository;
+    private final ProductMapper productMapper;
+
+    @Autowired
+    public ProductServiceImpl(ProductRepository productRepository, CategoryRepository categoryRepository, ProductMapper productMapper) {
+        this.productRepository = productRepository;
+        this.categoryRepository = categoryRepository;
+        this.productMapper = productMapper;
+    }
 
     @Override
     @Transactional
     public List<Product> getAllProducts() {
-        return products;
+        try {
+            Iterator<ProductEntity> productEntities = productRepository.findAll().iterator();
+
+            if (!productEntities.hasNext()) {
+                throw new ProductNotFoundException(1L);
+            }
+
+            List<Product> products = productMapper.fromProductEntities(productEntities);
+
+            return products;
+        } catch (Exception e) {
+            throw new PersistenceException(e);
+        }
     }
+
 
     @Override
     @Transactional
     public Product getProductById(Long productId) {
-        return products.stream()
-                .filter(product -> product.getId().equals(productId))
-                .findFirst()
-                .orElseThrow(() -> {
-                    log.info("Product with id {} not found", productId);
-                    return new ProductNotFoundException(productId);
-                });
+        try {
+            ProductEntity productEntity = productRepository.findById(productId)
+                    .orElseThrow(() -> new ProductNotFoundException(productId));
+            return mapToDomainProduct(productEntity);
+        } catch (Exception e) {
+            throw new PersistenceException(e);
+        }
     }
-
-//    @Override
-//    @Transactional
-//    public Product getProductById(Long productId) {
-//        try {
-//            return products.stream()
-//                    .filter(product -> product.getId().equals(productId))
-//                    .findFirst()
-//                    .orElseThrow(() -> {
-//                        log.info("Product with id {} not found", productId);
-//                        return new ProductNotFoundException(productId);
-//                    });
-//        } catch (ProductNotFoundException e) {
-//            // Log the exception and wrap it in PersistenceException
-//            log.error("Error occurred while retrieving product with id {}", productId, e);
-//            throw new PersistenceException(e);
-//        }
-//    }
 
     @Override
     @Transactional
     public Product createProduct(Product product) {
-        if (product.getCategory() == null) {
-            Category defaultCategory = Category.builder()
-                    .id(1L)
-                    .name("Default Category")
-                    .description("Default category description")
-                    .build();
-            product = product.toBuilder()
-                    .category(defaultCategory)
-                    .build();
+        try {
+            CategoryEntity categoryEntity = Optional.ofNullable(product.getCategory())
+                    .map(c -> categoryRepository.findById(c.getId()).orElseThrow(() -> new IllegalArgumentException("Invalid category")))
+                    .orElseGet(() -> categoryRepository.findById(1L).orElseThrow(() -> new IllegalArgumentException("Default category not found")));
+
+            ProductEntity productEntity = mapToEntity(product, categoryEntity);
+            productRepository.save(productEntity);
+            log.info("Product created: {}", product);
+            return mapToDomainProduct(productEntity);
+        } catch (Exception e) {
+            throw new PersistenceException(e);
         }
-
-        products.add(product);
-        log.info("Product created: {}", product);
-        return product;
     }
-
 
     @Override
     @Transactional
     public Product updateProduct(Long productId, Product updatedProduct) {
-        Product existingProduct = getProductById(productId);
+        try {
+            ProductEntity existingProductEntity = productRepository.findById(productId)
+                    .orElseThrow(() -> new ProductNotFoundException(productId));
 
-        Product product = Product.builder()
-                .id(existingProduct.getId())
-                .name(updatedProduct.getName())
-                .type(updatedProduct.getType())
-                .price(updatedProduct.getPrice())
-                .description(updatedProduct.getDescription())
-                .category(updatedProduct.getCategory() != null ? updatedProduct.getCategory() : existingProduct.getCategory())
-                .build();
+            CategoryEntity categoryEntity = Optional.ofNullable(updatedProduct.getCategory())
+                    .map(c -> categoryRepository.findById(c.getId()).orElseThrow(() -> new IllegalArgumentException("Invalid category")))
+                    .orElse(existingProductEntity.getCategory());
 
-        int index = products.indexOf(existingProduct);
-
-        if (index < 0) {
-            throw new NoSuchElementException("Product not found: " + productId);
+            ProductEntity productEntity = mapToEntity(updatedProduct, categoryEntity);
+            productEntity.setId(existingProductEntity.getId());
+            productRepository.save(productEntity);
+            log.info("Product updated: {}", productEntity);
+            return mapToDomainProduct(productEntity);
+        } catch (Exception e) {
+            throw new PersistenceException(e);
         }
-
-        products.set(index, product);
-        log.info("Product updated: {}", product);
-        return product;
     }
 
     @Override
     @Transactional
     public void deleteProduct(Long productId) {
-        Product product = getProductById(productId);
-        products.remove(product);
-        log.info("Product deleted with id: {}", productId);
+        try {
+            ProductEntity productEntity = productRepository.findById(productId)
+                    .orElseThrow(() -> new ProductNotFoundException(productId));
+            productRepository.delete(productEntity);
+            log.info("Product deleted with id: {}", productId);
+        } catch (Exception e) {
+            throw new PersistenceException(e);
+        }
     }
 
-    private List<Product> buildAllProductsMock() {
-        Category electronics = Category.builder()
-                .id(1L)
-                .name("Electronics")
-                .description("Devices and gadgets")
+    private Product mapToDomainProduct(ProductEntity productEntity) {
+        return Product.builder()
+                .id(productEntity.getId())
+                .name(productEntity.getName())
+                .type(ProductType.valueOf(productEntity.getType().name()))
+                .price(productEntity.getPrice())
+                .description(productEntity.getDescription())
+                .category(mapToDomainCategory(productEntity.getCategory()))
                 .build();
+    }
 
-        Category toys = Category.builder()
-                .id(2L)
-                .name("Toys")
-                .description("Fun items for pets")
+    private List<Product> mapToDomainProducts(List<ProductEntity> productEntities) {
+        return productEntities.stream()
+                .map(this::mapToDomainProduct)
+                .toList();
+    }
+
+    private Category mapToDomainCategory(CategoryEntity categoryEntity) {
+        return Category.builder()
+                .id(categoryEntity.getId())
+                .name(categoryEntity.getName())
+                .description(categoryEntity.getDescription())
                 .build();
+    }
 
-        return new ArrayList<>(List.of(
-                Product.builder()
-                        .id(1L)
-                        .name("Laser Pointer Asteroid")
-                        .type(ProductType.COSMIC_CATNIP)
-                        .price(15.99)
-                        .description("A high-quality laser pointer.")
-                        .category(electronics)
-                        .build(),
-                Product.builder()
-                        .id(2L)
-                        .name("Catnip Toy Meteor")
-                        .type(ProductType.NEBULA_NAPPING_PODS)
-                        .price(9.99)
-                        .description("A fun toy filled with catnip.")
-                        .category(toys)
-                        .build(),
-                Product.builder()
-                        .id(3L)
-                        .name("Galaxy Feline Feeder")
-                        .type(ProductType.PLASMA_PAW_WARMERS)
-                        .price(39.99)
-                        .description("An automatic feeder for cats.")
-                        .category(electronics)
-                        .build()
-        ));
+    private ProductEntity mapToEntity(Product product, CategoryEntity categoryEntity) {
+        return ProductEntity.builder()
+                .name(product.getName())
+                .type(product.getType())
+                .price(product.getPrice())
+                .description(product.getDescription())
+                .category(categoryEntity)
+                .build();
     }
 }

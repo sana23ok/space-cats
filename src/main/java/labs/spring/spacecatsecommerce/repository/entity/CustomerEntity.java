@@ -33,8 +33,10 @@ import org.hibernate.annotations.NaturalId;
 public class CustomerEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "customer_id_seq")
-    @SequenceGenerator(name = "customer_id_seq", sequenceName = "customer_id_seq")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE,
+            generator = "customer_id_seq")
+    @SequenceGenerator(name = "customer_id_seq",
+            sequenceName = "customer_id_seq")
     Long id;
 
     String name;
@@ -46,13 +48,16 @@ public class CustomerEntity {
     @Column(nullable = false, unique = true)
     UUID customerReference;
 
-    @ElementCollection(targetClass = CommunicationChannel.class, fetch = FetchType.EAGER)
+    @ElementCollection(targetClass = CommunicationChannel.class,
+            fetch = FetchType.EAGER)
     @CollectionTable(name = "customer_communication_channels",
             joinColumns = @JoinColumn(name = "customer_id"))
-    @Enumerated(EnumType.ORDINAL)
+    @Enumerated(EnumType.STRING)
     List<CommunicationChannel> communicationChannel;
 
-    @OneToMany(mappedBy = "customer", cascade = {CascadeType.PERSIST, CascadeType.MERGE},
+    @OneToMany(mappedBy = "customer",
+            cascade = {CascadeType.PERSIST,
+                    CascadeType.MERGE},
             fetch = FetchType.LAZY)
     List<OrderEntity> orders;
 

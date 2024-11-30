@@ -1,6 +1,5 @@
 package labs.spring.spacecatsecommerce.service.impl;
 
-import labs.spring.spacecatsecommerce.common.CommunicationChannel;
 import labs.spring.spacecatsecommerce.domain.CustomerDetails;
 import labs.spring.spacecatsecommerce.repository.CustomerRepository;
 import labs.spring.spacecatsecommerce.repository.entity.CustomerEntity;
@@ -9,9 +8,7 @@ import labs.spring.spacecatsecommerce.service.exception.CustomerNotFoundExceptio
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -80,7 +77,6 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     private CustomerEntity convertToCustomerEntity(CustomerDetails customerDetails) {
-        // Example conversion logic
         return CustomerEntity.builder()
                 .id(customerDetails.getId())
                 .name(customerDetails.getName())
@@ -91,7 +87,6 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     private CustomerDetails convertToCustomerDetails(CustomerEntity customerEntity) {
-        // Example conversion logic
         return CustomerDetails.builder()
                 .id(customerEntity.getId())
                 .name(customerEntity.getName())
