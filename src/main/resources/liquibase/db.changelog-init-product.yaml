@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: product-table-init
+      id: product-1
       author: oksana
       changes:
         - createTable:
@@ -8,59 +8,73 @@ databaseChangeLog:
             columns:
               - column:
                   name: id
-                  type: BIGINT
+                  type: bigint
+                  autoIncrement: true
                   constraints:
                     primaryKey: true
                     nullable: false
               - column:
                   name: name
-                  type: VARCHAR(255)
+                  type: varchar(255)
                   constraints:
                     nullable: false
               - column:
                   name: type
-                  type: VARCHAR(50)
+                  type: varchar(255)
                   constraints:
                     nullable: false
               - column:
                   name: price
-                  type: DECIMAL(10,2)
+                  type: decimal(10,2)
                   constraints:
                     nullable: false
               - column:
                   name: description
-                  type: TEXT
+                  type: text
                   constraints:
                     nullable: true
               - column:
                   name: category_id
-                  type: BIGINT
+                  type: bigint
                   constraints:
                     nullable: false
+
+  - changeSet:
+      id: product-2
+      author: oksana
+      changes:
         - addForeignKeyConstraint:
             baseTableName: product
             baseColumnNames: category_id
+            constraintName: fk_product_category
             referencedTableName: category
             referencedColumnNames: id
-            constraintName: fk_product_category
+            onDelete: CASCADE
 
-        - addUniqueConstraint:
-            tableName: product
-            columnNames: category_id, name
-            constraintName: uq_product_name_category
-
-        - createIndex:
-            tableName: product
-            indexName: idx_product_name
-            columns:
-              - name: name
-
+  - changeSet:
+      id: product-3
+      author: oksana
+      changes:
         - createSequence:
             sequenceName: product_id_seq
             startValue: 1
             incrementBy: 1
-        - addAutoIncrement:
+
+  - changeSet:
+      id: product-alter-type
+      author: oksana
+      changes:
+        - modifyDataType:
             tableName: product
-            columnName: id
-            incrementBy: 1
-            startWith: 1
+            columnName: type
+            newDataType: smallint
+            customChange: "USING type::smallint"
+
+  - changeSet:
+      id: product-alter-price
+      author: oksana
+      changes:
+        - modifyDataType:
+            tableName: product
+            columnName: price
+            newDataType: float

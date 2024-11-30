@@ -1,11 +1,13 @@
 databaseChangeLog:
-  - include:
-      file: liquibase/db.changelog-init.yaml
-  - include:
-      file: liquibase/db.changelog-init-orders.yaml
-  - include:
-      file: liquibase/db.changelog-init-orders-entry.yaml
+#  - include:
+#      file: liquibase/db.changelog-init-drop.yaml
   - include:
       file: liquibase/db.changelog-init-category.yaml
   - include:
       file: liquibase/db.changelog-init-product.yaml
+  - include:
+      file: liquibase/db.changelog-init-customers.yaml
+  - include:
+      file: liquibase/db.changelog-init-orders.yaml
+  - include:
+      file: liquibase/db.changelog-init-orders-entry.yaml

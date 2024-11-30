@@ -46,7 +46,6 @@ public class PaymentServiceImpl implements PaymentService {
                 })
                 .body(PaymentClientResponseDto.class);
 
-
         return paymentServiceMapper.toPaymentTransaction(payment.getCartId(), paymentClientResponseDto);
     }
 

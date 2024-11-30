@@ -24,7 +24,7 @@ import static jakarta.persistence.CascadeType.PERSIST;
 @Builder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "order")
+@Table(name = "\"order\"")
 public class OrderEntity {
 
     @Id

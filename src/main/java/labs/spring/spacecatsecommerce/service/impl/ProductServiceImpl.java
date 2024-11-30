@@ -3,6 +3,7 @@ import labs.spring.spacecatsecommerce.common.ProductType;
 import labs.spring.spacecatsecommerce.domain.Category;
 import labs.spring.spacecatsecommerce.domain.Product;
 import labs.spring.spacecatsecommerce.service.ProductService;
+import labs.spring.spacecatsecommerce.service.exception.PersistenceException;
 import labs.spring.spacecatsecommerce.service.exception.ProductNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -19,11 +20,13 @@ public class ProductServiceImpl implements ProductService {
     private final List<Product> products = buildAllProductsMock();
 
     @Override
+    @Transactional
     public List<Product> getAllProducts() {
         return products;
     }
 
     @Override
+    @Transactional
     public Product getProductById(Long productId) {
         return products.stream()
                 .filter(product -> product.getId().equals(productId))
@@ -33,6 +36,24 @@ public class ProductServiceImpl implements ProductService {
                     return new ProductNotFoundException(productId);
                 });
     }
+
+//    @Override
+//    @Transactional
+//    public Product getProductById(Long productId) {
+//        try {
+//            return products.stream()
+//                    .filter(product -> product.getId().equals(productId))
+//                    .findFirst()
+//                    .orElseThrow(() -> {
+//                        log.info("Product with id {} not found", productId);
+//                        return new ProductNotFoundException(productId);
+//                    });
+//        } catch (ProductNotFoundException e) {
+//            // Log the exception and wrap it in PersistenceException
+//            log.error("Error occurred while retrieving product with id {}", productId, e);
+//            throw new PersistenceException(e);
+//        }
+//    }
 
     @Override
     @Transactional

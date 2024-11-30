@@ -2,6 +2,7 @@ databaseChangeLog:
   - changeSet:
       id: customers-table-init
       author: oksana
+      runOnChange: true
       changes:
         # Create sequence for Customer ID
         - createSequence:
@@ -9,7 +10,6 @@ databaseChangeLog:
             incrementBy: 50
 
         # Create Customer table
-
         - createTable:
             tableName: customer
             columns:

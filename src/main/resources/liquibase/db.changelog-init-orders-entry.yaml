@@ -2,6 +2,7 @@ databaseChangeLog:
   - changeSet:
       id: orders-entry-table-init
       author: oksana
+      runOnChange: true
       changes:
         # Create the order_entry table with sequence for 'id' and foreign key to 'orders'
         - createTable:

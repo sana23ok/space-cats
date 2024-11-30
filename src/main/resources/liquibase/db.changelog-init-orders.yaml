@@ -2,6 +2,7 @@ databaseChangeLog:
   - changeSet:
       id: orders-table-init
       author: oksana
+      runOnChange: true
       changes:
         # Create the order table with sequence for 'id' and foreign key to 'customer'
         - createTable:
@@ -47,7 +48,7 @@ databaseChangeLog:
             referencedColumnNames: id
             constraintName: fk_orders_customer
 
-        # Add unique constraint for customer_id and cart_id combination
+        # Uncomment this to add unique constraint for customer_id and cart_id combination
         - addUniqueConstraint:
             tableName: orders
             columnNames: customer_id, cart_id
