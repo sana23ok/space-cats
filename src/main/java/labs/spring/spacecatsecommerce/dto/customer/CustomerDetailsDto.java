@@ -17,6 +17,7 @@ import lombok.extern.jackson.Jacksonized;
 @Jacksonized
 @GroupSequence({ CustomerDetailsDto.class, ExtendedValidation.class})
 public class CustomerDetailsDto {
+    Long id;
 
     @NotBlank(message = "Name is mandatory")
     @Size(max = 100, message = "Name cannot exceed 100 characters")

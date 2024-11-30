@@ -38,15 +38,10 @@ public class CustomerEntity {
     @SequenceGenerator(name = "customer_id_seq",
             sequenceName = "customer_id_seq")
     Long id;
-
     String name;
     String email;
     String address;
     String phoneNumber;
-
-    @NaturalId
-    @Column(nullable = false, unique = true)
-    UUID customerReference;
 
     @ElementCollection(targetClass = CommunicationChannel.class,
             fetch = FetchType.EAGER)
@@ -56,8 +51,7 @@ public class CustomerEntity {
     List<CommunicationChannel> communicationChannel;
 
     @OneToMany(mappedBy = "customer",
-            cascade = {CascadeType.PERSIST,
-                    CascadeType.MERGE},
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE},
             fetch = FetchType.LAZY)
     List<OrderEntity> orders;
 

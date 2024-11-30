@@ -1,10 +1,12 @@
 package labs.spring.spacecatsecommerce.service.impl;
 
 import labs.spring.spacecatsecommerce.domain.CustomerDetails;
+import labs.spring.spacecatsecommerce.dto.customer.CustomerDetailsDto;
 import labs.spring.spacecatsecommerce.repository.CustomerRepository;
 import labs.spring.spacecatsecommerce.repository.entity.CustomerEntity;
 import labs.spring.spacecatsecommerce.service.CustomerService;
 import labs.spring.spacecatsecommerce.service.exception.CustomerNotFoundException;
+import labs.spring.spacecatsecommerce.service.mapper.CustomerDetailsMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,9 +19,11 @@ import java.util.stream.StreamSupport;
 public class CustomerServiceImpl implements CustomerService {
 
     private final CustomerRepository customerRepository;
+    private final CustomerDetailsMapper customerMapper;
 
-    public CustomerServiceImpl(CustomerRepository customerRepository) {
+    public CustomerServiceImpl(CustomerRepository customerRepository, CustomerDetailsMapper customerMapper) {
         this.customerRepository = customerRepository;
+        this.customerMapper = customerMapper;
     }
 
     @Override
@@ -47,13 +51,14 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     @Transactional
-    public CustomerDetails createCustomer(CustomerDetails customerDetails) {
-        CustomerEntity customerEntity = convertToCustomerEntity(customerDetails);
+    public CustomerDetailsDto createCustomer(CustomerDetailsDto customerDetailsDto) {
+        CustomerEntity customerEntity = customerMapper.dtoToCustomerEntity(customerDetailsDto);
         CustomerEntity savedCustomerEntity = customerRepository.save(customerEntity);
-        CustomerDetails savedCustomerDetails = convertToCustomerDetails(savedCustomerEntity);
+        CustomerDetailsDto savedCustomerDetails = customerMapper.entityToCustomerDetailsDto(savedCustomerEntity);
         log.info("Customer created: {}", savedCustomerDetails);
         return savedCustomerDetails;
     }
+
 
     @Override
     @Transactional
