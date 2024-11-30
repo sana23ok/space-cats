@@ -53,9 +53,12 @@ public class CustomerServiceImpl implements CustomerService {
     @Transactional
     public CustomerDetailsDto createCustomer(CustomerDetailsDto customerDetailsDto) {
         CustomerEntity customerEntity = customerMapper.dtoToCustomerEntity(customerDetailsDto);
+        System.out.println("customerEntity " + customerEntity);
         CustomerEntity savedCustomerEntity = customerRepository.save(customerEntity);
+        System.out.println("savedCustomerEntity" + savedCustomerEntity);
         CustomerDetailsDto savedCustomerDetails = customerMapper.entityToCustomerDetailsDto(savedCustomerEntity);
         log.info("Customer created: {}", savedCustomerDetails);
+        System.out.println("savedCustomerDetails" + savedCustomerDetails);
         return savedCustomerDetails;
     }
 
@@ -81,15 +84,6 @@ public class CustomerServiceImpl implements CustomerService {
         return updatedCustomerDetails;
     }
 
-    private CustomerEntity convertToCustomerEntity(CustomerDetails customerDetails) {
-        return CustomerEntity.builder()
-                .id(customerDetails.getId())
-                .name(customerDetails.getName())
-                .address(customerDetails.getAddress())
-                .phoneNumber(customerDetails.getPhoneNumber())
-                .email(customerDetails.getEmail())
-                .build();
-    }
 
     private CustomerDetails convertToCustomerDetails(CustomerEntity customerEntity) {
         return CustomerDetails.builder()

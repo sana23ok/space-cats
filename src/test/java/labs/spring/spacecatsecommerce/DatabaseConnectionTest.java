@@ -28,14 +28,14 @@ class DatabaseConnectionTest {
                         .address("123 Space St")
                         .phoneNumber("123-456-7890")
                         .email("lucas@example.com")
-                        .customerReference(UUID.fromString("828d10a3-50cb-40af-b0d6-9b3338858087"))  // Ensure this field is set
+                        //.customerReference(UUID.fromString("828d10a3-50cb-40af-b0d6-9b3338858087"))  // Ensure this field is set
                         .build(),
                 CustomerEntity.builder()
                         .name("Lyasa")
                         .address("456 Cosmic Blvd")
                         .phoneNumber("987-654-3210")
                         .email("lyasa@example.com")
-                        .customerReference(UUID.fromString("4595b3ea-9df4-4214-b19d-335bf80a6fcf"))  // Ensure this field is set
+                        //.customerReference(UUID.fromString("4595b3ea-9df4-4214-b19d-335bf80a6fcf"))  // Ensure this field is set
                         .build()
         );
         customerRepository.saveAll(mockEntities);
@@ -52,7 +52,7 @@ class DatabaseConnectionTest {
             System.out.println("Customer Address: " + customer.getAddress());
             System.out.println("Customer Phone Number: " + customer.getPhoneNumber());
             System.out.println("Customer Email: " + customer.getEmail());
-            System.out.println("Customer Reference: " + customer.getCustomerReference());
+            //System.out.println("Customer Reference: " + customer.getCustomerReference());
             System.out.println("---------------------------");
         });
     }

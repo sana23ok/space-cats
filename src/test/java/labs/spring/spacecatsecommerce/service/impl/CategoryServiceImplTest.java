@@ -1,64 +1,91 @@
 package labs.spring.spacecatsecommerce.service.impl;
 
+import labs.spring.spacecatsecommerce.AbstractIT;
 import labs.spring.spacecatsecommerce.dto.CategoryDTO;
+import labs.spring.spacecatsecommerce.repository.CategoryRepository;
+import labs.spring.spacecatsecommerce.repository.entity.CategoryEntity;
+import labs.spring.spacecatsecommerce.service.CategoryService;
+import labs.spring.spacecatsecommerce.service.mapper.CategoryMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
-@ExtendWith(MockitoExtension.class)
-class CategoryServiceImplTest {
+public class CategoryServiceImplTest extends AbstractIT {
 
-    @InjectMocks
-    private CategoryServiceImpl categoryService;
+    @Autowired
+    private CategoryService categoryService;
 
-    @Mock
-    private List<CategoryDTO> mockCategories;
+    @Autowired
+    private CategoryRepository categoryRepository;
+
+    @Autowired
+    private CategoryMapper categoryMapper;
 
     @BeforeEach
     void setUp() {
-        mockCategories = List.of(
-                CategoryDTO.builder().id(1L).name("Electronics").description("Devices and gadgets").build(),
-                CategoryDTO.builder().id(2L).name("Clothing").description("Apparel and fashion items").build(),
-                CategoryDTO.builder().id(3L).name("Books").description("Various kinds of books").build()
-        );
+        categoryRepository.deleteAll();
     }
 
     @Test
-    @Order(1)
-    void testGetCategoryById_whenCategoryExists() {
-        Long existingCategoryId = 1L;
-        CategoryDTO expectedCategory = mockCategories.get(0);
-        CategoryDTO category = categoryService.getCategoryById(existingCategoryId);
+    @Transactional
+    void testGetCategoryById() {
+        // Arrange
+        CategoryEntity categoryEntity = CategoryEntity.builder()
+                .name("Electronics")
+                .description("Devices and gadgets")
+                .build();
+        categoryRepository.save(categoryEntity);
 
-        assertNotNull(category, "Category should not be null");
-        assertEquals(expectedCategory.getId(), category.getId(), "Category ID should match");
-        assertEquals(expectedCategory.getName(), category.getName(), "Category name should match");
-        assertEquals(expectedCategory.getDescription(), category.getDescription(), "Category description should match");
+        // Act
+        CategoryDTO categoryDTO = categoryService.getCategoryById(categoryEntity.getId());
+
+        // Assert
+        assertNotNull(categoryDTO);
+        assertEquals("Electronics", categoryDTO.getName());
+        assertEquals("Devices and gadgets", categoryDTO.getDescription());
     }
 
     @Test
-    @Order(2)
-    void testGetCategoryById_whenCategoryDoesNotExist() {
-        Long nonExistingCategoryId = 99L;
-        CategoryDTO category = categoryService.getCategoryById(nonExistingCategoryId);
-
-        assertNull(category, "Category should be null when not found");
-    }
-
-    @Test
-    @Order(3)
+    @Transactional
     void testGetAllCategories() {
-        List<CategoryDTO> expectedCategories = mockCategories;
+        // Arrange
+        CategoryEntity category1 = CategoryEntity.builder()
+                .name("Electronics")
+                .description("Devices and gadgets")
+                .build();
+        CategoryEntity category2 = CategoryEntity.builder()
+                .name("Toys")
+                .description("Fun items for pets")
+                .build();
+        categoryRepository.save(category1);
+        categoryRepository.save(category2);
+
+        // Act
         List<CategoryDTO> categories = categoryService.getAllCategories();
 
-        assertNotNull(categories, "Categories list should not be null");
-        assertEquals(expectedCategories.size(), categories.size(), "Category list size should match");
-        assertTrue(categories.containsAll(expectedCategories), "Categories list should contain all expected categories");
+        // Assert
+        assertNotNull(categories);
+        assertEquals(2, categories.size());
+    }
+
+    @Test
+    @Transactional
+    void testCreateCategory() {
+        // Arrange
+        CategoryDTO categoryDTO = CategoryDTO.builder()
+                .name("Books")
+                .description("Various kinds of books")
+                .build();
+
+        // Act
+        CategoryDTO createdCategory = categoryService.createCategory(categoryDTO);
+
+        // Assert
+        assertNotNull(createdCategory);
+        assertEquals("Books", createdCategory.getName());
+        assertTrue(categoryRepository.existsById(createdCategory.getId()));
     }
 }

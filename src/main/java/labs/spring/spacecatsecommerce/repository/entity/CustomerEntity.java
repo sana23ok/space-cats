@@ -33,7 +33,7 @@ import org.hibernate.annotations.NaturalId;
 public class CustomerEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE,
+    @GeneratedValue(strategy = GenerationType.IDENTITY,
             generator = "customer_id_seq")
     @SequenceGenerator(name = "customer_id_seq",
             sequenceName = "customer_id_seq")

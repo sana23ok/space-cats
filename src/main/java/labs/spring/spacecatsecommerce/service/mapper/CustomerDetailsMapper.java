@@ -26,6 +26,7 @@ public interface CustomerDetailsMapper {
     CustomerEntity dtoToCustomerEntity(CustomerDetailsDto customerDetailsDto);
 
     // Mapping from CustomerEntity to CustomerDetailsDto
+    @Mapping(target = "id", source = "id")
     @Mapping(target = "name", source = "name")
     @Mapping(target = "address", source = "address")
     @Mapping(target = "phoneNumber", source = "phoneNumber")
@@ -37,6 +38,7 @@ public interface CustomerDetailsMapper {
     @Named("toCustomerDetailsDto")
     default CustomerDetailsDto detailsToCustomerDetailsDto(CustomerDetails customerDetails) {
         return CustomerDetailsDto.builder()
+                .id(customerDetails.getId())
                 .name(customerDetails.getName())
                 .address(customerDetails.getAddress())
                 .phoneNumber(customerDetails.getPhoneNumber())
@@ -63,6 +65,7 @@ public interface CustomerDetailsMapper {
     @Named("toCustomerDetailsEntry")
     default CustomerDetailsEntry toCustomerDetailsEntry(CustomerDetails customerDetails) {
         return CustomerDetailsEntry.builder()
+                .id(customerDetails.getId())
                 .name(customerDetails.getName())
                 .address(customerDetails.getAddress())
                 .phoneNumber(customerDetails.getPhoneNumber())
