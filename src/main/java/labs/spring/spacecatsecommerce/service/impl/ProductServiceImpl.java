@@ -1,7 +1,5 @@
 package labs.spring.spacecatsecommerce.service.impl;
 
-import labs.spring.spacecatsecommerce.common.ProductType;
-import labs.spring.spacecatsecommerce.domain.Category;
 import labs.spring.spacecatsecommerce.domain.Product;
 import labs.spring.spacecatsecommerce.repository.CategoryRepository;
 import labs.spring.spacecatsecommerce.repository.ProductRepository;
@@ -15,12 +13,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Optional;
 
-@Slf4j
 @Service
+@Slf4j
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
@@ -38,29 +34,26 @@ public class ProductServiceImpl implements ProductService {
     @Transactional
     public List<Product> getAllProducts() {
         try {
-            Iterator<ProductEntity> productEntities = productRepository.findAll().iterator();
-
-            if (!productEntities.hasNext()) {
-                throw new ProductNotFoundException(1L);
-            }
-
-            List<Product> products = productMapper.fromProductEntities(productEntities);
-
-            return products;
+            List<ProductEntity> entities = productRepository.findAll();
+            return entities.stream().map(productMapper::entityToDomain).toList();
         } catch (Exception e) {
+            log.error("Error fetching products", e);
             throw new PersistenceException(e);
         }
     }
-
 
     @Override
     @Transactional
     public Product getProductById(Long productId) {
         try {
-            ProductEntity productEntity = productRepository.findById(productId)
+            ProductEntity entity = productRepository.findById(productId)
                     .orElseThrow(() -> new ProductNotFoundException(productId));
-            return mapToDomainProduct(productEntity);
+            return productMapper.entityToDomain(entity);
+        } catch (ProductNotFoundException e) {
+            log.error("Product not found with ID {}", productId, e);
+            throw e;
         } catch (Exception e) {
+            log.error("Error fetching product with ID {}", productId, e);
             throw new PersistenceException(e);
         }
     }
@@ -69,36 +62,36 @@ public class ProductServiceImpl implements ProductService {
     @Transactional
     public Product createProduct(Product product) {
         try {
-            CategoryEntity categoryEntity = Optional.ofNullable(product.getCategory())
-                    .map(c -> categoryRepository.findById(c.getId()).orElseThrow(() -> new IllegalArgumentException("Invalid category")))
-                    .orElseGet(() -> categoryRepository.findById(1L).orElseThrow(() -> new IllegalArgumentException("Default category not found")));
-
-            ProductEntity productEntity = mapToEntity(product, categoryEntity);
-            productRepository.save(productEntity);
-            log.info("Product created: {}", product);
-            return mapToDomainProduct(productEntity);
+            CategoryEntity category = categoryRepository.findById(product.getCategory().getId())
+                    .orElseThrow(() -> new IllegalArgumentException("Invalid category ID"));
+            ProductEntity entity = productMapper.domainToEntityWithCategory(product, category);
+            ProductEntity saved = productRepository.save(entity);
+            return productMapper.entityToDomain(saved);
         } catch (Exception e) {
+            log.error("Error creating product", e);
             throw new PersistenceException(e);
         }
     }
 
     @Override
     @Transactional
-    public Product updateProduct(Long productId, Product updatedProduct) {
+    public Product updateProduct(Long id, Product product) {
         try {
-            ProductEntity existingProductEntity = productRepository.findById(productId)
-                    .orElseThrow(() -> new ProductNotFoundException(productId));
+            ProductEntity existing = productRepository.findById(id)
+                    .orElseThrow(() -> new ProductNotFoundException(id));
+            CategoryEntity category = categoryRepository.findById(product.getCategory().getId())
+                    .orElseThrow(() -> new IllegalArgumentException("Invalid category ID"));
 
-            CategoryEntity categoryEntity = Optional.ofNullable(updatedProduct.getCategory())
-                    .map(c -> categoryRepository.findById(c.getId()).orElseThrow(() -> new IllegalArgumentException("Invalid category")))
-                    .orElse(existingProductEntity.getCategory());
+            // Ensure the category entity is managed by the persistence context
+            category = categoryRepository.findById(category.getId())
+                    .orElseThrow(() -> new IllegalArgumentException("Invalid category ID"));
 
-            ProductEntity productEntity = mapToEntity(updatedProduct, categoryEntity);
-            productEntity.setId(existingProductEntity.getId());
-            productRepository.save(productEntity);
-            log.info("Product updated: {}", productEntity);
-            return mapToDomainProduct(productEntity);
+            ProductEntity updated = productMapper.domainToEntityWithCategory(product, category);
+            updated.setId(existing.getId());
+            ProductEntity saved = productRepository.save(updated);
+            return productMapper.entityToDomain(saved);
         } catch (Exception e) {
+            log.error("Error updating product", e);
             throw new PersistenceException(e);
         }
     }
@@ -107,47 +100,18 @@ public class ProductServiceImpl implements ProductService {
     @Transactional
     public void deleteProduct(Long productId) {
         try {
-            ProductEntity productEntity = productRepository.findById(productId)
-                    .orElseThrow(() -> new ProductNotFoundException(productId));
-            productRepository.delete(productEntity);
-            log.info("Product deleted with id: {}", productId);
+            ProductEntity entity = productRepository.findById(productId)
+                    .orElseThrow(() -> new ProductNotFoundException(productId));  // Ensure ProductNotFoundException is thrown here
+            productRepository.delete(entity);  // Proceed with deletion if the product is found
+        } catch (ProductNotFoundException e) {
+            // Log ProductNotFoundException if necessary
+            log.error("Product not found with ID {}", productId, e);
+            throw e;  // Rethrow the ProductNotFoundException
         } catch (Exception e) {
-            throw new PersistenceException(e);
+            log.error("Error deleting product with ID {}", productId, e);
+            throw new PersistenceException(e);  // Wrap other exceptions in PersistenceException
         }
     }
 
-    private Product mapToDomainProduct(ProductEntity productEntity) {
-        return Product.builder()
-                .id(productEntity.getId())
-                .name(productEntity.getName())
-                .type(ProductType.valueOf(productEntity.getType().name()))
-                .price(productEntity.getPrice())
-                .description(productEntity.getDescription())
-                .category(mapToDomainCategory(productEntity.getCategory()))
-                .build();
-    }
-
-    private List<Product> mapToDomainProducts(List<ProductEntity> productEntities) {
-        return productEntities.stream()
-                .map(this::mapToDomainProduct)
-                .toList();
-    }
-
-    private Category mapToDomainCategory(CategoryEntity categoryEntity) {
-        return Category.builder()
-                .id(categoryEntity.getId())
-                .name(categoryEntity.getName())
-                .description(categoryEntity.getDescription())
-                .build();
-    }
-
-    private ProductEntity mapToEntity(Product product, CategoryEntity categoryEntity) {
-        return ProductEntity.builder()
-                .name(product.getName())
-                .type(product.getType())
-                .price(product.getPrice())
-                .description(product.getDescription())
-                .category(categoryEntity)
-                .build();
-    }
 }
+

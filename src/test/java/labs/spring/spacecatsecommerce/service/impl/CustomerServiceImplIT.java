@@ -10,14 +10,15 @@ import labs.spring.spacecatsecommerce.service.exception.CustomerNotFoundExceptio
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.testcontainers.junit.jupiter.Testcontainers;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-
-@DisplayName("Customer Service Tests with Testcontainers")
+@Testcontainers
+@DisplayName("CustomerService Tests with Testcontainers")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class CustomerServiceImplTest extends AbstractIT {
+public class CustomerServiceImplIT extends AbstractIT {
 
     @Autowired
     private CustomerService customerService;
@@ -52,7 +53,7 @@ public class CustomerServiceImplTest extends AbstractIT {
 
     @Test
     @Order(1)
-    void shouldReturnAllCustomerDetails() {
+    void testGetAllCustomerDetails() {
         List<CustomerDetails> customerDetailsList = customerService.getAllCustomerDetails();
         assertNotNull(customerDetailsList);
         assertFalse(customerDetailsList.isEmpty());
@@ -60,7 +61,7 @@ public class CustomerServiceImplTest extends AbstractIT {
 
     @Test
     @Order(2)
-    void shouldReturnCustomerById() {
+    void testGetCustomerById() {
         CustomerDetails customerDetails = customerService.getCustomerDetailsById(newCustomerId);
         assertNotNull(customerDetails);
         assertEquals(newCustomerId, customerDetails.getId());
@@ -69,7 +70,7 @@ public class CustomerServiceImplTest extends AbstractIT {
 
     @Test
     @Order(3)
-    void shouldCreateCustomer() {
+    void testCreateCustomer() {
         CustomerDetailsDto newCustomer =
                 CustomerDetailsDto.builder()
                         .name(newCustomerName)
@@ -82,14 +83,13 @@ public class CustomerServiceImplTest extends AbstractIT {
         assertNotNull(createdCustomer);
         assertEquals(newCustomerName, createdCustomer.getName());
 
-        // Check if the customer is persisted in the database
         CustomerEntity savedCustomerEntity = customerRepository.findById(createdCustomer.getId()).orElseThrow();
         assertEquals(newCustomerName, savedCustomerEntity.getName());
     }
 
     @Test
     @Order(4)
-    void shouldUpdateCustomer() {
+    void testUpdateCustomer() {
         CustomerDetails updatedDetails = CustomerDetails.builder()
                 .id(newCustomerId)
                 .name(updatedCustomerName)
@@ -107,14 +107,14 @@ public class CustomerServiceImplTest extends AbstractIT {
 
     @Test
     @Order(5)
-    void shouldThrowCustomerNotFoundExceptionWhenGettingCustomerById() {
+    void testCustomerNotFoundExceptionWhenGettingCustomerById() {
         Long invalidId = -1L;
         assertThrows(CustomerNotFoundException.class, () -> customerService.getCustomerDetailsById(invalidId));
     }
 
     @Test
     @Order(6)
-    void shouldThrowCustomerNotFoundExceptionWhenUpdatingNonExistentCustomer() {
+    void testCustomerNotFoundExceptionWhenUpdatingNonExistentCustomer() {
         Long invalidId = -1L;
         CustomerDetails updatedDetails = CustomerDetails.builder()
                 .name(updatedCustomerName)
@@ -123,20 +123,5 @@ public class CustomerServiceImplTest extends AbstractIT {
 
         assertThrows(CustomerNotFoundException.class, () -> customerService.updateCustomer(invalidId, updatedDetails));
     }
-
-//    @Test
-//    @Order(7)
-//    void shouldThrowExceptionWhenCreatingDuplicateCustomer() {
-//        CustomerDetailsDto duplicateCustomer =
-//                CustomerDetailsDto.builder()
-//                        .name("John Doe")
-//                        .address("123 Main St")
-//                        .email("john@example.com")
-//                        .phoneNumber("555-5555")
-//                        .build();
-//
-//        assertThrows(CustomerAlreadyExistsException.class, () -> customerService.createCustomer(duplicateCustomer));
-//    }
-
 }
 

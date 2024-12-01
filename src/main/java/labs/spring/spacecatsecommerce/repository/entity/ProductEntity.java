@@ -24,7 +24,7 @@ import lombok.NoArgsConstructor;
 public class ProductEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product_id_seq")
+    @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "product_id_seq")
     @SequenceGenerator(name = "product_id_seq", sequenceName = "product_id_seq")
     Long id;
 
@@ -33,7 +33,7 @@ public class ProductEntity {
     Double price;
     String description;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)
     CategoryEntity category;
 }

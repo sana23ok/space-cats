@@ -43,7 +43,7 @@ public class CustomerController {
 
     @PostMapping
     public ResponseEntity<CustomerDetailsDto> createCustomer(@RequestBody @Valid CustomerDetailsDto customerDetailsDto){
-        var createdCustomerDetails = customerService.createCustomer(customerDetailsDto);
+        CustomerDetailsDto createdCustomerDetails = customerService.createCustomer(customerDetailsDto);
         return ResponseEntity.ok(createdCustomerDetails);
     }
 

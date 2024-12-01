@@ -1,6 +1,4 @@
 databaseChangeLog:
-#  - include:
-#      file: liquibase/db.changelog-init-drop.yaml
   - include:
       file: liquibase/db.changelog-init-category.yaml
   - include:

@@ -2,12 +2,11 @@ package labs.spring.spacecatsecommerce.repository;
 
 import labs.spring.spacecatsecommerce.repository.entity.ProductEntity;
 import java.util.List;
-import java.util.UUID;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ProductRepository extends CrudRepository<ProductEntity, Long> {
+public interface ProductRepository extends JpaRepository<ProductEntity, Long> {
 
     List<ProductEntity> findByName(String name);
 

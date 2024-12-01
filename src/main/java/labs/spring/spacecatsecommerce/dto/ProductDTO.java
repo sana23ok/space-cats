@@ -14,7 +14,6 @@ import lombok.extern.jackson.Jacksonized;
 @Builder
 @Jacksonized
 public class ProductDTO {
-    @NotNull(message = "Product ID cannot be null")
     private Long id;
 
     @CosmicWordCheck

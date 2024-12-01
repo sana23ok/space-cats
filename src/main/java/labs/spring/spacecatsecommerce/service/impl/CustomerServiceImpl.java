@@ -62,7 +62,6 @@ public class CustomerServiceImpl implements CustomerService {
         return savedCustomerDetails;
     }
 
-
     @Override
     @Transactional
     public CustomerDetails updateCustomer(Long customerId, CustomerDetails updatedDetails) {
