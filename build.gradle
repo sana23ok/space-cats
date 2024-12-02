@@ -43,7 +43,9 @@ ext {
             "**/domain/",
             "**/dto/",
             "**/toggle/",
-            "**/common/"
+            "**/common/",
+            "**/repository/",
+            "**/service/exception/"
     ]
 }
 

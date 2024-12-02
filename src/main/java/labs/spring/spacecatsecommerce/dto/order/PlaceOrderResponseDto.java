@@ -11,6 +11,6 @@ import lombok.extern.jackson.Jacksonized;
 public class PlaceOrderResponseDto {
 
     String orderId;
-    UUID transactionId;
+    String transactionId;
 
 }

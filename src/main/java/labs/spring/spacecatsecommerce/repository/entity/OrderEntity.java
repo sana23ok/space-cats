@@ -1,6 +1,5 @@
 package labs.spring.spacecatsecommerce.repository.entity;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -15,9 +14,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.NaturalId;
-
-import static jakarta.persistence.CascadeType.PERSIST;
 
 @Entity
 @Data
@@ -28,20 +24,16 @@ import static jakarta.persistence.CascadeType.PERSIST;
 public class OrderEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "order_id_seq")
+    @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "order_id_seq")
     @SequenceGenerator(name = "order_id_seq", sequenceName = "order_id_seq")
     Long id;
-
-    @NaturalId
-    String cartId;
     Double totalPrice;
-    String paymentReference;
 
-    @ManyToOne(cascade = PERSIST)
+    @ManyToOne
     @JoinColumn(name = "customer_id", nullable = false)
     CustomerEntity customer;
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @OneToMany(mappedBy = "order", orphanRemoval = true)
     List<OrderEntryEntity> entries;
 
 }

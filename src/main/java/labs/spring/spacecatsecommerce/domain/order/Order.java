@@ -1,7 +1,7 @@
 package labs.spring.spacecatsecommerce.domain.order;
 
 import java.util.List;
-import java.util.UUID;
+
 import lombok.Builder;
 import lombok.Value;
 
@@ -9,11 +9,8 @@ import lombok.Value;
 @Builder(toBuilder = true)
 public class Order {
 
-    String id;
-    UUID transactionId;
+    Long id;
     List<OrderEntry> entries;
-    String cartId;
-    Long consumerReference;
-    Double totalPrice;
-
+    Long customer;
+    double totalPrice;
 }

@@ -13,8 +13,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import static jakarta.persistence.CascadeType.PERSIST;
-
 @Entity
 @Data
 @Builder(toBuilder = true)
@@ -24,15 +22,15 @@ import static jakarta.persistence.CascadeType.PERSIST;
 public class OrderEntryEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "order_entry_id_seq")
+    @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "order_entry_id_seq")
     @SequenceGenerator(name = "order_entry_id_seq", sequenceName = "order_entry_id_seq")
     Long id;
 
-    String productCode;
+    Long productCode;
     Integer quantity;
     Double price;
 
-    @ManyToOne(cascade = PERSIST)
+    @ManyToOne
     @JoinColumn(name = "order_id", referencedColumnName = "id", nullable = false)
     OrderEntity order;
 }
