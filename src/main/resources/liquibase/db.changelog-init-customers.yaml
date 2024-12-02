@@ -36,7 +36,7 @@ databaseChangeLog:
                     nullable: true
               - column:
                   name: phone_number
-                  type: VARCHAR(20)
+                  type: VARCHAR(50)
                   constraints:
                     nullable: true
               - column:
@@ -44,7 +44,8 @@ databaseChangeLog:
                   type: UUID
                   constraints:
                     nullable: false
-        # Add unique constraints on customer_reference, email, and phone_number
+
+        # Add unique constraints
         - addUniqueConstraint:
             tableName: customer
             columnNames: customer_reference
@@ -58,6 +59,7 @@ databaseChangeLog:
             columnNames: phone_number
             constraintName: uq_customer_phone_number
 
+        # Create table for communication channels
         - createTable:
             tableName: customer_communication_channels
             columns:
