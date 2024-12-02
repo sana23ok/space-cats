@@ -7,7 +7,7 @@ import lombok.Value;
 @Builder(toBuilder = true)
 public class OrderEntry {
     Long id;
-    String productCode;
+    Long productCode;
     int quantity;
     double price;
 }

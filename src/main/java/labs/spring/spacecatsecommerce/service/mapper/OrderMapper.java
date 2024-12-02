@@ -51,13 +51,13 @@ public interface OrderMapper {
     @Mapping(target = "price", source = "price")
     OrderEntryEntity toOrderEntryEntity(OrderEntry orderEntry);
 
-    // Map PlaceOrderRequestDto to Order domain
-    @Mapping(target = "totalPrice", source = "totalPrice")
-    @Mapping(target = "entries", source = "entries")
-    Order toOrder(PlaceOrderRequestDto placeOrderRequestDto);
+//    // Map PlaceOrderRequestDto to Order domain
+//    @Mapping(target = "totalPrice", source = "totalPrice")
+//    @Mapping(target = "entries", source = "entries")
+//    Order toOrder(PlaceOrderRequestDto placeOrderRequestDto);
 
-    // Map Order domain to PlaceOrderRequestDto
-    PlaceOrderRequestDto toPlaceOrderRequestDto(Order order);
+//    // Map Order domain to PlaceOrderRequestDto
+//    PlaceOrderRequestDto toPlaceOrderRequestDto(Order order);
 
     // Map Customer ID to CustomerEntity
     @Named("mapCustomerIdToEntity")
@@ -77,7 +77,7 @@ public interface OrderMapper {
     @Mapping(target = "totalPrice", source = "totalPrice")
     OrderDto toOrderDto(OrderEntity savedOrderEntity);
 
-    // Map a list of OrderEntity to a list of Order domain objects
-    List<Order> toOrders(List<OrderEntity> orderEntities);
+//    // Map a list of OrderEntity to a list of Order domain objects
+//    List<Order> toOrders(List<OrderEntity> orderEntities);
 }
 

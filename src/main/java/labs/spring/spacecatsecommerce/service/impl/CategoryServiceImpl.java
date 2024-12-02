@@ -33,7 +33,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     @Transactional(readOnly = true)
     public List<CategoryDTO> getAllCategories() {
-        List<CategoryEntity> categoryEntities = (List<CategoryEntity>) categoryRepository.findAll();
+        List<CategoryEntity> categoryEntities = categoryRepository.findAll();
         return categoryEntities.stream()
                 .map(categoryMapper::toCategoryDto)
                 .collect(Collectors.toList());

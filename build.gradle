@@ -36,7 +36,7 @@ jacocoTestReport {
 
 ext {
     // Minimal Coverage
-    minimumCoveragePerFile = 0.5
+    minimumCoveragePerFile = 0.8
     filesExcludedFromCoverage = [
             "**/*MarketApplication.*",
             "**/config/*Configuration.*",

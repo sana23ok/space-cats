@@ -41,12 +41,6 @@ public class ProductController {
         return ResponseEntity.ok(productMapper.domainToDto(product));
     }
 
-//    @PostMapping
-//    public ResponseEntity<ProductDTO> createProduct(@Valid @RequestBody ProductDTO productDTO) {
-//        Product product = productMapper.dtoToDomain(productDTO);
-//        Product created = productService.createProduct(product);
-//        return ResponseEntity.status(201).body(productMapper.domainToDto(created));
-//    }
     @PostMapping
     public ResponseEntity<ProductDTO>
     createProduct(@Valid @RequestBody ProductDTO productDTO)
