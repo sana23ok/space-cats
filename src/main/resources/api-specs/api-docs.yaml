@@ -1,0 +1,313 @@
+openapi: 3.0.1
+info:
+  title: OpenAPI definition
+  version: v0
+servers:
+- url: http://localhost:8080
+  description: Generated server url
+paths:
+  /api/v1/products/{id}:
+    get:
+      tags:
+      - product-controller
+      summary: Retrieve a product by ID
+      description: Returns a single product by its unique ID.
+      operationId: getProductById
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "404":
+          description: Product not found
+          content:
+            application/hal+json:
+              schema:
+                $ref: "#/components/schemas/ProductDTO"
+        "200":
+          description: Product retrieved successfully
+          content:
+            application/hal+json:
+              schema:
+                $ref: "#/components/schemas/ProductDTO"
+    put:
+      tags:
+      - product-controller
+      summary: Update an existing product
+      description: Updates an existing product with the specified ID.
+      operationId: updateProduct
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProductDTO"
+        required: true
+      responses:
+        "200":
+          description: Product updated successfully
+          content:
+            application/hal+json:
+              schema:
+                $ref: "#/components/schemas/ProductDTO"
+        "404":
+          description: Product not found
+          content:
+            application/hal+json:
+              schema:
+                $ref: "#/components/schemas/ProductDTO"
+    delete:
+      tags:
+      - product-controller
+      summary: Delete a product by ID
+      description: Deletes a product with the specified ID.
+      operationId: deleteProduct
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "204":
+          description: Product deleted successfully
+        "404":
+          description: Product not found
+  /api/v1/products:
+    get:
+      tags:
+      - product-controller
+      summary: Retrieve all products
+      description: Returns a list of all available products.
+      operationId: getAllProducts
+      responses:
+        "200":
+          description: List of products retrieved successfully
+          content:
+            application/hal+json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ProductDTO"
+    post:
+      tags:
+      - product-controller
+      summary: Create a new product
+      description: Creates a new product with the given details.
+      operationId: createProduct
+      requestBody:
+        description: Product details for creation
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProductDTO"
+        required: true
+      responses:
+        "201":
+          description: Product created successfully
+          content:
+            application/hal+json:
+              schema:
+                $ref: "#/components/schemas/ProductDTO"
+  /api/v1/customers:
+    get:
+      tags:
+      - customer-controller
+      operationId: getAllCustomers
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: "#/components/schemas/CustomerDetailsListDto"
+    post:
+      tags:
+      - customer-controller
+      operationId: createCustomer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CustomerDetailsDto"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: "#/components/schemas/CustomerDetailsDto"
+  /api/v1/spaceCats:
+    get:
+      tags:
+      - space-cat-controller
+      operationId: getAllSpaceCats
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SpaceCat"
+  /api/v1/spaceCats/{id}:
+    get:
+      tags:
+      - space-cat-controller
+      operationId: getSpaceCatById
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: "#/components/schemas/SpaceCat"
+  /api/v1/greetings/{name}:
+    get:
+      tags:
+      - greeting-controller
+      operationId: getCustomerById
+      parameters:
+      - name: name
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                type: string
+  /api/v1/customers/{id}:
+    get:
+      tags:
+      - customer-controller
+      operationId: getCustomerById_1
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            application/hal+json:
+              schema:
+                $ref: "#/components/schemas/CustomerDetailsDto"
+components:
+  schemas:
+    ProductDTO:
+      required:
+      - id
+      - name
+      - price
+      - type
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          maxLength: 50
+          minLength: 1
+          type: string
+        type:
+          type: string
+          enum:
+          - COSMIC_CATNIP
+          - NEBULA_NAPPING_PODS
+          - PLASMA_PAW_WARMERS
+        price:
+          minimum: 0
+          type: number
+          format: double
+        description:
+          maxLength: 200
+          minLength: 0
+          type: string
+    CustomerDetailsDto:
+      required:
+      - address
+      - email
+      - name
+      - phoneNumber
+      type: object
+      properties:
+        name:
+          maxLength: 100
+          minLength: 0
+          type: string
+        address:
+          maxLength: 255
+          minLength: 0
+          type: string
+        phoneNumber:
+          pattern: "^\\+?[0-9. ()-]{7,25}$"
+          type: string
+        email:
+          type: string
+        preferredChannel:
+          type: array
+          items:
+            type: string
+    SpaceCat:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        planet:
+          type: string
+        breed:
+          type: string
+    CustomerDetailsEntry:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        address:
+          type: string
+        phoneNumber:
+          type: string
+        email:
+          type: string
+        preferredChannel:
+          type: array
+          items:
+            type: string
+    CustomerDetailsListDto:
+      type: object
+      properties:
+        customerDetailsEntries:
+          type: array
+          items:
+            $ref: "#/components/schemas/CustomerDetailsEntry"

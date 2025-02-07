@@ -1,0 +1,56 @@
+databaseChangeLog:
+  - changeSet:
+      id: category-1
+      author: oksana
+      changes:
+        - createTable:
+            tableName: category
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: description
+                  type: text
+                  constraints:
+                    nullable: true
+
+  - changeSet:
+      id: category-2
+      author: oksana
+      changes:
+        - createSequence:
+            sequenceName: category_id_seq
+            startValue: 1
+            incrementBy: 1
+            cacheSize: 50
+
+  - changeSet:
+      id: category-3
+      author: oksana
+      changes:
+        - addUniqueConstraint:
+            tableName: category
+            columnNames: name
+            constraintName: unique_category_name
+
+  - changeSet:
+      id: category-4
+      author: oksana
+      changes:
+        - createIndex:
+            tableName: category
+            indexName: idx_category_name
+            columns:
+              - column:
+                  name: name

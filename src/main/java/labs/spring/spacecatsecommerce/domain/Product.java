@@ -7,9 +7,12 @@ import lombok.Value;
 @Value
 @Builder(toBuilder = true)
 public class Product {
-    private Long id;                  // Ensure these fields are declared as private
-    private String name;
-    private ProductType type;
-    private Double price;
-    private String description;
+
+    Long id;
+    String name;
+    ProductType type;
+    Double price;
+    String description;
+    Category category;
+
 }
