@@ -36,14 +36,16 @@ jacocoTestReport {
 
 ext {
     // Minimal Coverage
-    minimumCoveragePerFile = 0.5
+    minimumCoveragePerFile = 0.8
     filesExcludedFromCoverage = [
             "**/*MarketApplication.*",
             "**/config/*Configuration.*",
             "**/domain/",
             "**/dto/",
             "**/toggle/",
-            "**/common/"
+            "**/common/",
+            "**/repository/",
+            "**/service/exception/"
     ]
 }
 
@@ -96,7 +98,10 @@ dependencies {
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
 // In-memory database for testing
-    implementation 'com.h2database:h2:2.2.224'
+//    implementation 'com.h2database:h2:2.2.224'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.liquibase:liquibase-core:4.30.0'
+    implementation 'org.postgresql:postgresql:42.7.4'
 }
 
 tasks.named('test') {

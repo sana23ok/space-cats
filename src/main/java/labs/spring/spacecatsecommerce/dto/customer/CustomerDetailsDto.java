@@ -1,6 +1,5 @@
-package labs.spring.spacecatsecommerce.dto;
+package labs.spring.spacecatsecommerce.dto.customer;
 
-import labs.spring.spacecatsecommerce.common.CommunicationChannel;
 import labs.spring.spacecatsecommerce.dto.validation.ExtendedValidation;
 import labs.spring.spacecatsecommerce.dto.validation.ValidSpaceAddress;
 import jakarta.validation.GroupSequence;
@@ -18,6 +17,7 @@ import lombok.extern.jackson.Jacksonized;
 @Jacksonized
 @GroupSequence({ CustomerDetailsDto.class, ExtendedValidation.class})
 public class CustomerDetailsDto {
+    Long id;
 
     @NotBlank(message = "Name is mandatory")
     @Size(max = 100, message = "Name cannot exceed 100 characters")

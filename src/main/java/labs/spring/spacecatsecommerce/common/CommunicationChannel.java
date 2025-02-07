@@ -5,5 +5,5 @@ public enum CommunicationChannel {
     EMAIL,
     TELEPATHY,
     HOLOGRAM,
-    SMS;
+    SMS
 }

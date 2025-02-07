@@ -1,4 +1,4 @@
-package labs.spring.spacecatsecommerce.dto;
+package labs.spring.spacecatsecommerce.dto.customer;
 
 import java.util.List;
 import lombok.Builder;
