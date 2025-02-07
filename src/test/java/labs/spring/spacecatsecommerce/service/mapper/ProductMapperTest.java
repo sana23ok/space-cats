@@ -2,14 +2,15 @@ package labs.spring.spacecatsecommerce.service.mapper;
 
 import labs.spring.spacecatsecommerce.common.ProductType;
 import labs.spring.spacecatsecommerce.domain.Product;
+import labs.spring.spacecatsecommerce.domain.Category;
 import labs.spring.spacecatsecommerce.dto.ProductDTO;
+import labs.spring.spacecatsecommerce.dto.CategoryDTO;
+import labs.spring.spacecatsecommerce.repository.entity.CategoryEntity;
+import labs.spring.spacecatsecommerce.repository.entity.ProductEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.util.Collections;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import org.mapstruct.factory.Mappers;
+import static org.junit.jupiter.api.Assertions.*;
 
 class ProductMapperTest {
 
@@ -17,84 +18,151 @@ class ProductMapperTest {
 
     @BeforeEach
     void setUp() {
-        productMapper = new ProductMapperImpl();
+        productMapper = Mappers.getMapper(ProductMapper.class);
     }
 
     @Test
-    void toProductDto_ShouldMapProductToProductDTO() {
-        Product product = Product.builder()
+    void testEntityToDomain() {
+        CategoryEntity categoryEntity = CategoryEntity.builder()
                 .id(1L)
-                .name("Sample Product")
-                .type(ProductType.COSMIC_CATNIP)
-                .price(99.99)
-                .description("A sample product description")
+                .name("Category 1")
                 .build();
 
-        ProductDTO productDto = productMapper.toProductDto(product);
-
-        assertThat(productDto).isNotNull();
-        assertThat(productDto.getId()).isEqualTo(product.getId());
-        assertThat(productDto.getName()).isEqualTo(product.getName());
-        assertThat(productDto.getType()).isEqualTo(product.getType());
-        assertThat(productDto.getPrice()).isEqualTo(product.getPrice());
-        assertThat(productDto.getDescription()).isEqualTo(product.getDescription());
-    }
-
-    @Test
-    void toProduct_ShouldMapProductDTOToProduct() {
-        ProductDTO productDto = ProductDTO.builder()
-                .id(1L)
-                .name("Sample Product")
-                .type(ProductType.COSMIC_CATNIP)
-                .price(99.99)
-                .description("A sample product description")
-                .build();
-
-        Product product = productMapper.toProduct(productDto);
-
-        assertThat(product).isNotNull();
-        assertThat(product.getId()).isEqualTo(productDto.getId());
-        assertThat(product.getName()).isEqualTo(productDto.getName());
-        assertThat(product.getType()).isEqualTo(productDto.getType());
-        assertThat(product.getPrice()).isEqualTo(productDto.getPrice());
-        assertThat(product.getDescription()).isEqualTo(productDto.getDescription());
-    }
-
-    @Test
-    void toProduct_NullProductDTO_ShouldReturnNull() {
-        Product product = productMapper.toProduct(null);
-        assertThat(product).isNull();
-    }
-
-    @Test
-    void toProductDtoList_ShouldMapListOfProductsToListOfProductDTOs() {
-        Product product1 = Product.builder()
+        ProductEntity productEntity = ProductEntity.builder()
                 .id(1L)
                 .name("Product 1")
                 .type(ProductType.COSMIC_CATNIP)
-                .price(199.99)
-                .description("First product description")
+                .price(100.0)
+                .description("Description 1")
+                .category(categoryEntity)
                 .build();
 
-        Product product2 = Product.builder()
-                .id(2L)
-                .name("Product 2")
-                .type(ProductType.COSMIC_CATNIP)
-                .price(29.99)
-                .description("Second product description")
-                .build();
+        Product product = productMapper.entityToDomain(productEntity);
 
-        List<ProductDTO> productDtos = productMapper.toProductDto(List.of(product1, product2));
-
-        assertThat(productDtos).isNotNull();
-        assertThat(productDtos).hasSize(2);
-        assertThat(productDtos.get(0).getName()).isEqualTo(product1.getName());
-        assertThat(productDtos.get(1).getName()).isEqualTo(product2.getName());
+        assertNotNull(product);
+        assertEquals(1L, product.getId());
+        assertEquals("Product 1", product.getName());
+        assertEquals(ProductType.COSMIC_CATNIP, product.getType());
+        assertEquals(100.0, product.getPrice());
+        assertEquals("Description 1", product.getDescription());
+        assertNotNull(product.getCategory());
+        assertEquals(1L, product.getCategory().getId());
+        assertEquals("Category 1", product.getCategory().getName());
     }
 
     @Test
-    void toProductDtoList_EmptyList_ShouldReturnEmptyList() {
-        List<ProductDTO> productDtos = productMapper.toProductDto(Collections.emptyList());
-        assertThat(productDtos).isNotNull().isEmpty();
+    void testDtoToDomain() {
+        CategoryDTO categoryDTO = CategoryDTO.builder()
+                .id(1L)
+                .name("Category 1")
+                .build();
+
+        ProductDTO productDTO = ProductDTO.builder()
+                .id(1L)
+                .name("Product 1")
+                .type(ProductType.COSMIC_CATNIP)
+                .price(100.0)
+                .description("Description 1")
+                .category(categoryDTO)
+                .build();
+
+        Product product = productMapper.dtoToDomain(productDTO);
+
+        assertNotNull(product);
+        assertEquals(1L, product.getId());
+        assertEquals("Product 1", product.getName());
+        assertEquals(ProductType.COSMIC_CATNIP, product.getType());
+        assertEquals(100.0, product.getPrice());
+        assertEquals("Description 1", product.getDescription());
+        assertNotNull(product.getCategory());
+        assertEquals(1L, product.getCategory().getId());
+        assertEquals("Category 1", product.getCategory().getName());
+    }
+
+    @Test
+    void testDomainToDto() {
+        Category category = Category.builder()
+                .id(1L)
+                .name("Category 1")
+                .build();
+
+        Product product = Product.builder()
+                .id(1L)
+                .name("Product 1")
+                .type(ProductType.COSMIC_CATNIP)
+                .price(100.0)
+                .description("Description 1")
+                .category(category)
+                .build();
+
+        ProductDTO productDTO = productMapper.domainToDto(product);
+
+        assertNotNull(productDTO);
+        assertEquals(1L, productDTO.getId());
+        assertEquals("Product 1", productDTO.getName());
+        assertEquals(ProductType.COSMIC_CATNIP, productDTO.getType());
+        assertEquals(100.0, productDTO.getPrice());
+        assertEquals("Description 1", productDTO.getDescription());
+        assertNotNull(productDTO.getCategory());
+        assertEquals(1L, productDTO.getCategory().getId());
+        assertEquals("Category 1", productDTO.getCategory().getName());
+    }
+
+    @Test
+    void testDomainToEntity() {
+        Category category = Category.builder()
+                .id(1L)
+                .name("Category 1")
+                .build();
+
+        Product product = Product.builder()
+                .id(1L)
+                .name("Product 1")
+                .type(ProductType.COSMIC_CATNIP)
+                .price(100.0)
+                .description("Description 1")
+                .category(category)
+                .build();
+
+        ProductEntity productEntity = productMapper.domainToEntity(product);
+
+        assertNotNull(productEntity);
+        assertEquals(1L, productEntity.getId());
+        assertEquals("Product 1", productEntity.getName());
+        assertEquals(ProductType.COSMIC_CATNIP, productEntity.getType());
+        assertEquals(100.0, productEntity.getPrice());
+        assertEquals("Description 1", productEntity.getDescription());
+        assertNotNull(productEntity.getCategory());
+        assertEquals(1L, productEntity.getCategory().getId());
+        assertEquals("Category 1", productEntity.getCategory().getName());
+    }
+
+    @Test void testDomainToEntityWithCategory()
+    { CategoryEntity categoryEntity = CategoryEntity.builder()
+            .id(1L) .name("Category 1")
+            .build();
+
+        Category category = Category.builder()
+                .id(categoryEntity.getId())
+                .name(categoryEntity.getName())
+                .build();
+
+        Product product = Product.builder()
+                .id(1L) .name("Product 1")
+                .type(ProductType.COSMIC_CATNIP)
+                .price(100.0)
+                .description("Description 1")
+                .category(category)
+                .build();
+
+        ProductEntity productEntity = productMapper.domainToEntityWithCategory(product, categoryEntity);
+        assertNotNull(productEntity); assertEquals(1L, productEntity.getId());
+        assertEquals("Product 1", productEntity.getName());
+        assertEquals(ProductType.COSMIC_CATNIP, productEntity.getType());
+        assertEquals(100.0, productEntity.getPrice());
+        assertEquals("Description 1", productEntity.getDescription());
+        assertNotNull(productEntity.getCategory());
+        assertEquals(1L, productEntity.getCategory().getId());
+        assertEquals("Category 1", productEntity.getCategory().getName());
     }
 }
